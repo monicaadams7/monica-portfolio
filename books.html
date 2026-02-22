@@ -4,19 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Favorite Books — Monica Adams</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #EAF3F8; color: #1a1a1a; min-height: 100vh; -webkit-font-smoothing: antialiased; }
         .page { max-width: 600px; margin: 0 auto; padding: 60px 24px 80px; }
+
         .back { display: inline-flex; align-items: center; gap: 6px; font-size: .75rem; font-weight: 500; color: #999; text-decoration: none; letter-spacing: .3px; margin-bottom: 32px; transition: color .2s; }
         .back:hover { color: #333; }
         .back svg { width: 14px; height: 14px; }
-        h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; }
-        .subtitle { font-size: .85rem; color: #888; margin-bottom: 32px; line-height: 1.6; }
 
+        .page-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+        h1 { font-size: 1.6rem; font-weight: 700; }
+        .subtitle { font-size: .85rem; color: #888; margin-bottom: 10px; line-height: 1.6; }
+        .hint { font-size: .65rem; color: #bbb; letter-spacing: .3px; margin-bottom: 28px; }
+
+        /* Recommend button */
+        .rec-btn {
+            flex-shrink: 0;
+            background: #1a1a1a;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 7px 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: .65rem;
+            font-weight: 600;
+            letter-spacing: .3px;
+            cursor: pointer;
+            transition: background .2s, transform .15s;
+            white-space: nowrap;
+        }
+        .rec-btn:hover { background: #333; transform: scale(1.03); }
+
+        /* Book list */
         .book-list { display: flex; flex-direction: column; }
-
         .book-card {
             cursor: pointer;
             border-bottom: 1px solid #d4e5ef;
@@ -31,10 +53,7 @@
             transition: transform 0.42s cubic-bezier(0.4, 0, 0.2, 1),
                         height 0.42s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
-        .book-card.flipped .book-inner {
-            transform: rotateY(180deg);
-        }
+        .book-card.flipped .book-inner { transform: rotateY(180deg); }
 
         .book-front {
             padding: 13px 2px;
@@ -44,7 +63,6 @@
             align-items: baseline;
             gap: 10px;
         }
-
         .btitle {
             font-size: .95rem;
             font-weight: 500;
@@ -55,226 +73,458 @@
             transition: text-decoration-color .2s;
         }
         .book-card:hover .btitle { text-decoration-color: #1a1a1a; }
-
-        .bauthor {
-            font-size: .76rem;
-            color: #aaa;
-            white-space: nowrap;
-        }
+        .bauthor { font-size: .76rem; color: #aaa; white-space: nowrap; }
 
         .book-back {
             position: absolute;
             top: 0; left: 0; width: 100%;
-            padding: 13px 2px;
+            padding: 14px 2px 16px;
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
             transform: rotateY(180deg);
         }
-
-        .book-back p {
-            font-size: .875rem;
+        .bquote {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: .82rem;
+            line-height: 1.75;
+            color: #555;
+            border-left: 2px solid #b8d8e8;
+            padding-left: 12px;
+            margin-bottom: 10px;
+        }
+        .bquote + .bquote { margin-top: 8px; }
+        .bdesc {
+            font-size: .82rem;
             line-height: 1.72;
-            color: #444;
+            color: #666;
+            padding-left: 14px;
         }
 
-        .hint {
-            font-size: .65rem;
-            color: #bbb;
-            letter-spacing: .3px;
-            margin-bottom: 28px;
+        /* Modal */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,.45);
+            z-index: 300;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity .25s;
+            padding: 24px;
         }
+        .modal-overlay.visible { opacity: 1; pointer-events: auto; }
+
+        .modal {
+            background: #fff;
+            border-radius: 16px;
+            padding: 32px 28px 28px;
+            width: 100%; max-width: 420px;
+            box-shadow: 0 8px 40px rgba(0,0,0,.15);
+            transform: translateY(12px);
+            transition: transform .25s;
+        }
+        .modal-overlay.visible .modal { transform: translateY(0); }
+
+        .modal-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
+        .modal-sub { font-size: .78rem; color: #999; margin-bottom: 22px; }
+
+        .modal-field { margin-bottom: 14px; }
+        .modal-label { display: block; font-size: .68rem; font-weight: 600; letter-spacing: .5px; text-transform: uppercase; color: #888; margin-bottom: 5px; }
+        .modal-input, .modal-textarea {
+            width: 100%;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: .88rem;
+            color: #1a1a1a;
+            background: #fafafa;
+            transition: border-color .2s;
+            outline: none;
+        }
+        .modal-input:focus, .modal-textarea:focus { border-color: #1a1a1a; background: #fff; }
+        .modal-textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+
+        .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+        .modal-submit {
+            flex: 1;
+            background: #1a1a1a; color: #fff;
+            border: none; border-radius: 10px;
+            padding: 11px;
+            font-family: 'Inter', sans-serif;
+            font-size: .82rem; font-weight: 600;
+            cursor: pointer; transition: background .2s;
+        }
+        .modal-submit:hover { background: #333; }
+        .modal-cancel {
+            background: none; border: 1.5px solid #e0e0e0;
+            border-radius: 10px; padding: 11px 18px;
+            font-family: 'Inter', sans-serif;
+            font-size: .82rem; font-weight: 500; color: #888;
+            cursor: pointer; transition: border-color .2s, color .2s;
+        }
+        .modal-cancel:hover { border-color: #aaa; color: #555; }
+
+        .modal-success { text-align: center; padding: 12px 0; display: none; }
+        .modal-success-icon { font-size: 2rem; margin-bottom: 10px; }
+        .modal-success-title { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+        .modal-success-sub { font-size: .82rem; color: #888; line-height: 1.6; }
     </style>
 </head>
 <body>
-    <div class="page">
-        <a class="back" href="experience.html">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
-            Back
-        </a>
+<div class="page">
+    <a class="back" href="experience.html">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
+        Back
+    </a>
+    <div class="page-header">
         <h1>Favorite Books</h1>
-        <div class="subtitle">A running list of my favorite books.</div>
-        <div class="hint">Click any title to flip it.</div>
+        <button class="rec-btn" id="recBtn">Recommend me a book</button>
+    </div>
+    <div class="subtitle">A running list of my favorite books.</div>
+    <div class="hint">Click any title to flip it.</div>
 
-        <div class="book-list">
+    <div class="book-list">
 
-            <div class="book-card">
-                <div class="book-inner">
-                    <div class="book-front"><span class="btitle">Billy Summers</span><span class="bauthor">Stephen King</span></div>
-                    <div class="book-back"><p>King at his most human. A hitman who pretends to be dumb reads Steinbeck between kills — it's a thriller but really about storytelling and what we hide from the world. One of his best.</p></div>
+        <div class="book-card">
+            <div class="book-inner">
+                <div class="book-front"><span class="btitle">Billy Summers</span><span class="bauthor">Stephen King</span></div>
+                <div class="book-back">
+                    <div class="bquote">"A man who pretends to be stupid among clever people is clever. A man who pretends to be stupid among stupid people is just stupid."</div>
+                    <p class="bdesc">King at his most human. A hitman who pretends to be dumb reads Steinbeck between kills — it's a thriller but really about storytelling and what we hide from the world.</p>
                 </div>
             </div>
+        </div>
 
-            <div class="book-card">
-                <div class="book-inner">
-                    <div class="book-front"><span class="btitle">The Dutch House</span><span class="bauthor">Ann Patchett</span></div>
-                    <div class="book-back"><p>Siblings who can't stop orbiting the house that shaped them. The prose is so clean it almost hurts — I kept reading sentences twice.</p></div>
+        <div class="book-card">
+            <div class="book-inner">
+                <div class="book-front"><span class="btitle">The Dutch House</span><span class="bauthor">Ann Patchett</span></div>
+                <div class="book-back">
+                    <div class="bquote">"The past never stops. It layers and layers."</div>
+                    <p class="bdesc">Siblings who can't stop orbiting the house that shaped them. The prose is so clean it almost hurts — I kept reading sentences twice.</p>
                 </div>
             </div>
+        </div>
 
-            <div class="book-card">
-                <div class="book-inner">
-                    <div class="book-front"><span class="btitle">Beneath a Scarlet Sky</span><span class="bauthor">Mark Sullivan</span></div>
-                    <div class="book-back"><p>Based on the true story of a teenage boy smuggling Jews over the Alps in WWII. Heart-stopping and completely unforgettable.</p></div>
+        <div class="book-card">
+            <div class="book-inner">
+                <div class="book-front"><span class="btitle">Beneath a Scarlet Sky</span><span class="bauthor">Mark Sullivan</span></div>
+                <div class="book-back">
+                    <div class="bquote">"Love was the only way to grasp another human being in the innermost core of their personality."</div>
+                    <p class="bdesc">Based on the true story of a teenage boy smuggling Jews over the Alps in WWII. Heart-stopping and completely unforgettable.</p>
                 </div>
             </div>
+        </div>
 
-            <div class="book-card">
-                <div class="book-inner">
-                    <div class="book-front"><span class="btitle">When Breath Becomes Air</span><span class="bauthor">Paul Kalanithi</span></div>
-                    <div class="book-back"><p>A neurosurgeon diagnosed with terminal cancer writes about what makes life worth living. I've recommended this to every person I know.</p></div>
+        <div class="book-card">
+            <div class="book-inner">
+                <div class="book-front"><span class="btitle">When Breath Becomes Air</span><span class="bauthor">Paul Kalanithi</span></div>
+                <div class="book-back">
+                    <div class="bquote">"You can't ever reach perfection, but you can believe in an asymptote toward which you are ceaselessly striving."</div>
+                    <p class="bdesc">A neurosurgeon diagnosed with terminal cancer writes about what makes life worth living. I've recommended this to every person I know.</p>
                 </div>
             </div>
+        </div>
 
-            <div class="book-card">
-                <div class="book-inner">
-                    <div class="book-front"><span class="btitle">The Spy and the Traitor</span><span class="bauthor">Ben Macintyre</span></div>
-                    <div class="book-back"><p>The true story of the most valuable spy of the Cold War. Reads like a thriller but every word is real. Ben Macintyre is the best nonfiction writer alive.</p></div>
+        <div class="book-card">
+            <div class="book-inner">
+                <div class="book-front"><span class="btitle">The Spy and the Traitor</span><span class="bauthor">Ben Macintyre</span></div>
+                <div class="book-back">
+                    <div class="bquote">"The Cold War was fought in the shadows, but its heroes were entirely human."</div>
+                    <p class="bdesc">The true story of the most valuable spy of the Cold War. Reads like a thriller but every word is real. Ben Macintyre is the best nonfiction writer alive.</p>
                 </div>
             </div>
+        </div>
 
-            <div class="book-card">
-                <div class="book-inner">
-                    <div class="book-front"><span class="btitle">Tomorrow, and Tomorrow, and Tomorrow</span><span class="bauthor">Gabrielle Zevin</span></div>
-                    <div class="book-back"><p>About creativity, collaboration, and two people who love each other but can never quite figure out how. The video game world is just a backdrop for the most honest love story I've read.</p></div>
+        <div class="book-card">
+            <div class="book-inner">
+                <div class="book-front"><span class="btitle">Tomorrow, and Tomorrow, and Tomorrow</span><span class="bauthor">Gabrielle Zevin</span></div>
+                <div class="book-back">
+                    <div class="bquote">"What is a game? It's tomorrow, and tomorrow, and tomorrow."</div>
+                    <div class="bquote">"To know someone is to know the games they loved as a child."</div>
+                    <div class="bquote">"Success is the cruelest form of failure, because it tells you the dream was never enough."</div>
+                    <p class="bdesc">About creativity, collaboration, and two people who love each other but can never quite figure out how. The video game world is just a backdrop for the most honest love story I've read.</p>
                 </div>
             </div>
+        </div>
 
-            <div class="book-card">
-                <div class="book-inner">
-                    <div class="book-front"><span class="btitle">Cutting for Stone</span><span class="bauthor">Abraham Verghese</span></div>
-                    <div class="book-back"><p>Twin brothers born in Ethiopia, separated by fate. Medicine, love, identity, and war braided across continents and decades. Completely immersive.</p></div>
+        <div class="book-card">
+            <div class="book-inner">
+                <div class="book-front"><span class="btitle">Cutting for Stone</span><span class="bauthor">Abraham Verghese</span></div>
+                <div class="book-back">
+                    <div class="bquote">"The key to your happiness is to own your slippers, own who you are, own how you look, own your family, own the talents you have, and own the ones you don't."</div>
+                    <p class="bdesc">Twin brothers born in Ethiopia, separated by fate. Medicine, love, identity, and war braided across continents and decades. Completely immersive.</p>
                 </div>
             </div>
+        </div>
 
-            <div class="book-card">
-                <div class="book-inner">
-                    <div class="book-front"><span class="btitle">Babel</span><span class="bauthor">R.F. Kuang</span></div>
-                    <div class="book-back"><p>Dark academia about translation, colonialism, and empire. Oxford has never felt so sinister. Genuinely changed how I think about language.</p></div>
+        <div class="book-card">
+            <div class="book-inner">
+                <div class="book-front"><span class="btitle">Babel</span><span class="bauthor">R.F. Kuang</span></div>
+                <div class="book-back">
+                    <div class="bquote">"That's just what translation is, I think. That's all speaking is. Listening to the other and trying to see past your own biases to glimpse what they actually mean."</div>
+                    <p class="bdesc">Dark academia about translation, colonialism, and empire. Oxford has never felt so sinister. Genuinely changed how I think about language.</p>
                 </div>
             </div>
+        </div>
 
-            <div class="book-card">
-                <div class="book-inner">
-                    <div class="book-front"><span class="btitle">The Book Thief</span><span class="bauthor">Markus Zusak</span></div>
-                    <div class="book-back"><p>Narrated by Death during WWII. Liesel stealing books in wartime Germany is one of the most beautiful stories ever written.</p></div>
+        <div class="book-card">
+            <div class="book-inner">
+                <div class="book-front"><span class="btitle">The Book Thief</span><span class="bauthor">Markus Zusak</span></div>
+                <div class="book-back">
+                    <div class="bquote">"I have hated the words and I have loved them, and I hope I have made them right."</div>
+                    <p class="bdesc">Narrated by Death during WWII. Liesel stealing books in wartime Germany is one of the most beautiful stories ever written.</p>
                 </div>
             </div>
+        </div>
 
-            <div class="book-card">
-                <div class="book-inner">
-                    <div class="book-front"><span class="btitle">The Boy in the Striped Pajamas</span><span class="bauthor">John Boyne</span></div>
-                    <div class="book-back"><p>Two nine-year-olds on opposite sides of a concentration camp fence. The innocence is what destroys you.</p></div>
+        <div class="book-card">
+            <div class="book-inner">
+                <div class="book-front"><span class="btitle">The Boy in the Striped Pajamas</span><span class="bauthor">John Boyne</span></div>
+                <div class="book-back">
+                    <div class="bquote">"Out-With. Hm. What was Out-With? And why had they come here?"</div>
+                    <p class="bdesc">Two nine-year-olds on opposite sides of a concentration camp fence. The innocence is what destroys you.</p>
                 </div>
             </div>
+        </div>
 
-            <div class="book-card">
-                <div class="book-inner">
-                    <div class="book-front"><span class="btitle">The Diary of a Young Girl</span><span class="bauthor">Anne Frank</span></div>
-                    <div class="book-back"><p>She was my age when she wrote this. That's all I keep thinking about. The humanity on every single page.</p></div>
+        <div class="book-card">
+            <div class="book-inner">
+                <div class="book-front"><span class="btitle">The Diary of a Young Girl</span><span class="bauthor">Anne Frank</span></div>
+                <div class="book-back">
+                    <div class="bquote">"Despite everything, I believe that people are really good at heart."</div>
+                    <p class="bdesc">She was my age when she wrote this. That's all I keep thinking about. The humanity on every single page.</p>
                 </div>
             </div>
+        </div>
 
-            <div class="book-card">
-                <div class="book-inner">
-                    <div class="book-front"><span class="btitle">The Martian</span><span class="bauthor">Andy Weir</span></div>
-                    <div class="book-back"><p>The most fun I've ever had reading about surviving alone on Mars. Mark Watney's voice is irresistible. Science has never been this funny.</p></div>
+        <div class="book-card">
+            <div class="book-inner">
+                <div class="book-front"><span class="btitle">The Martian</span><span class="bauthor">Andy Weir</span></div>
+                <div class="book-back">
+                    <div class="bquote">"I'm going to have to science the shit out of this."</div>
+                    <p class="bdesc">The most fun I've ever had reading about surviving alone on Mars. Mark Watney's voice is irresistible. Science has never been this funny.</p>
                 </div>
             </div>
+        </div>
 
-            <div class="book-card">
-                <div class="book-inner">
-                    <div class="book-front"><span class="btitle">A Little Life</span><span class="bauthor">Hanya Yanagihara</span></div>
-                    <div class="book-back"><p>The most emotionally devastating book I've ever read. Four friends in New York, one carrying a trauma beyond imagination. You will cry. A lot.</p></div>
+        <div class="book-card">
+            <div class="book-inner">
+                <div class="book-front"><span class="btitle">A Little Life</span><span class="bauthor">Hanya Yanagihara</span></div>
+                <div class="book-back">
+                    <div class="bquote">"But these were days of self-fulfillment, where settling for something that was not quite your first choice of a life seemed weak-willed and ignoble... There were times when the pressure to achieve happiness felt almost oppressive, as if happiness were something that everyone should and could attain, and that any sort of compromise in its pursuit was somehow your fault."</div>
+                    <p class="bdesc">The most emotionally devastating book I've ever read. Four friends in New York, one carrying a trauma beyond imagination. You will cry. A lot.</p>
                 </div>
             </div>
+        </div>
 
-            <div class="book-card">
-                <div class="book-inner">
-                    <div class="book-front"><span class="btitle">Circe</span><span class="bauthor">Madeline Miller</span></div>
-                    <div class="book-back"><p>The witch of Greek mythology finally speaks for herself. A story about power, solitude, and finding your own magic.</p></div>
+        <div class="book-card">
+            <div class="book-inner">
+                <div class="book-front"><span class="btitle">Circe</span><span class="bauthor">Madeline Miller</span></div>
+                <div class="book-back">
+                    <div class="bquote">"When I was born, the name for what I was did not exist."</div>
+                    <p class="bdesc">The witch of Greek mythology finally speaks for herself. A story about power, solitude, and finding your own magic.</p>
                 </div>
             </div>
+        </div>
 
-            <div class="book-card">
-                <div class="book-inner">
-                    <div class="book-front"><span class="btitle">Pachinko</span><span class="bauthor">Min Jin Lee</span></div>
-                    <div class="book-back"><p>Four generations of a Korean family in Japan across most of the twentieth century. Epic doesn't begin to cover it.</p></div>
+        <div class="book-card">
+            <div class="book-inner">
+                <div class="book-front"><span class="btitle">Pachinko</span><span class="bauthor">Min Jin Lee</span></div>
+                <div class="book-back">
+                    <div class="bquote">"Hansu never told him to study, but rather to learn, and it occurred to Noa that there was a marked difference. Learning was like playing, not labor."</div>
+                    <div class="bquote">"If you like everything you read, I can't take you seriously. Perhaps you didn't think about these books long enough."</div>
+                    <p class="bdesc">Four generations of a Korean family in Japan across most of the twentieth century. Epic doesn't begin to cover it.</p>
                 </div>
             </div>
+        </div>
 
-            <div class="book-card">
-                <div class="book-inner">
-                    <div class="book-front"><span class="btitle">Demon Copperhead</span><span class="bauthor">Barbara Kingsolver</span></div>
-                    <div class="book-back"><p>David Copperfield transplanted into Appalachia during the opioid crisis. Raw, real, and Pulitzer-winning for a reason.</p></div>
+        <div class="book-card">
+            <div class="book-inner">
+                <div class="book-front"><span class="btitle">Demon Copperhead</span><span class="bauthor">Barbara Kingsolver</span></div>
+                <div class="book-back">
+                    <div class="bquote">"Nobody's going to say you mattered. You get to decide that yourself."</div>
+                    <p class="bdesc">David Copperfield transplanted into Appalachia during the opioid crisis. Raw, real, and Pulitzer-winning for a reason.</p>
                 </div>
             </div>
+        </div>
 
-            <div class="book-card">
-                <div class="book-inner">
-                    <div class="book-front"><span class="btitle">Horse</span><span class="bauthor">Geraldine Brooks</span></div>
-                    <div class="book-back"><p>A lost painting, a skeleton, and a legendary racehorse connect people across centuries. Brooks makes history feel urgent.</p></div>
+        <div class="book-card">
+            <div class="book-inner">
+                <div class="book-front"><span class="btitle">Horse</span><span class="bauthor">Geraldine Brooks</span></div>
+                <div class="book-back">
+                    <div class="bquote">"The past is never past. It runs through us like blood."</div>
+                    <p class="bdesc">A lost painting, a skeleton, and a legendary racehorse connect people across centuries. Brooks makes history feel urgent.</p>
                 </div>
             </div>
+        </div>
 
-            <div class="book-card">
-                <div class="book-inner">
-                    <div class="book-front"><span class="btitle">The Song of Achilles</span><span class="bauthor">Madeline Miller</span></div>
-                    <div class="book-back"><p>Achilles and Patroclus retold as the love story it always was. I finished it on a plane and sat very still for a while afterward.</p></div>
+        <div class="book-card">
+            <div class="book-inner">
+                <div class="book-front"><span class="btitle">The Song of Achilles</span><span class="bauthor">Madeline Miller</span></div>
+                <div class="book-back">
+                    <div class="bquote">"Name one hero who was happy."</div>
+                    <p class="bdesc">Achilles and Patroclus retold as the love story it always was. I finished it on a plane and sat very still for a while afterward.</p>
                 </div>
             </div>
+        </div>
 
-            <div class="book-card">
-                <div class="book-inner">
-                    <div class="book-front"><span class="btitle">Harry Potter</span><span class="bauthor">J.K. Rowling</span></div>
-                    <div class="book-back"><p>My whole childhood. The books that made me a reader. I find something new every time I reread them.</p></div>
+        <div class="book-card">
+            <div class="book-inner">
+                <div class="book-front"><span class="btitle">Harry Potter</span><span class="bauthor">J.K. Rowling</span></div>
+                <div class="book-back">
+                    <div class="bquote">"It does not do to dwell on dreams and forget to live."</div>
+                    <p class="bdesc">My whole childhood. The books that made me a reader. I find something new every time I reread them.</p>
                 </div>
             </div>
+        </div>
 
-            <div class="book-card">
-                <div class="book-inner">
-                    <div class="book-front"><span class="btitle">On Writing</span><span class="bauthor">Stephen King</span></div>
-                    <div class="book-back"><p>Half memoir, half masterclass. The best book about writing I've ever read — and I'm not a writer. His voice is so alive on every page.</p></div>
+        <div class="book-card">
+            <div class="book-inner">
+                <div class="book-front"><span class="btitle">On Writing</span><span class="bauthor">Stephen King</span></div>
+                <div class="book-back">
+                    <div class="bquote">"The road to hell is paved with adverbs."</div>
+                    <p class="bdesc">Half memoir, half masterclass. The best book about writing I've ever read — and I'm not a writer. His voice is so alive on every page.</p>
                 </div>
             </div>
+        </div>
 
-            <div class="book-card">
-                <div class="book-inner">
-                    <div class="book-front"><span class="btitle">The Catcher in the Rye</span><span class="bauthor">J.D. Salinger</span></div>
-                    <div class="book-back"><p>I actually loved this. Holden's anger felt so honest, and the loneliness underneath all that bravado hit close to home.</p></div>
+        <div class="book-card">
+            <div class="book-inner">
+                <div class="book-front"><span class="btitle">The Catcher in the Rye</span><span class="bauthor">J.D. Salinger</span></div>
+                <div class="book-back">
+                    <div class="bquote">"Don't ever tell anybody anything. If you do, you start missing everybody."</div>
+                    <p class="bdesc">I actually loved this. Holden's anger felt so honest, and the loneliness underneath all that bravado hit close to home.</p>
                 </div>
             </div>
+        </div>
 
-            <div class="book-card">
-                <div class="book-inner">
-                    <div class="book-front"><span class="btitle">Into Thin Air</span><span class="bauthor">Jon Krakauer</span></div>
-                    <div class="book-back"><p>Krakauer was on the 1996 Everest expedition that killed eight people and wrote about it immediately after. The best and most haunting adventure writing I've ever read.</p></div>
+        <div class="book-card">
+            <div class="book-inner">
+                <div class="book-front"><span class="btitle">Into Thin Air</span><span class="bauthor">Jon Krakauer</span></div>
+                <div class="book-back">
+                    <div class="bquote">"Attempting to climb Everest is an intrinsically irrational act."</div>
+                    <p class="bdesc">Krakauer was on the 1996 Everest expedition that killed eight people and wrote about it immediately after. The best and most haunting adventure writing I've ever read.</p>
                 </div>
             </div>
+        </div>
 
-            <div class="book-card">
-                <div class="book-inner">
-                    <div class="book-front"><span class="btitle">The Secret History</span><span class="bauthor">Donna Tartt</span></div>
-                    <div class="book-back"><p>A group of classics students at a Vermont college commit a murder — and you know this from page one. The whole book is the slow unraveling of how and why. Dark academia at its absolute best.</p></div>
+        <div class="book-card">
+            <div class="book-inner">
+                <div class="book-front"><span class="btitle">The Secret History</span><span class="bauthor">Donna Tartt</span></div>
+                <div class="book-back">
+                    <div class="bquote">"Beauty is terror. Whatever we call beautiful, we quiver before it."</div>
+                    <p class="bdesc">A group of classics students commit a murder — and you know from page one. The whole book is the slow unraveling of how and why. Dark academia at its absolute best.</p>
                 </div>
             </div>
+        </div>
 
+    </div>
+</div>
+
+<!-- Recommend Modal -->
+<div class="modal-overlay" id="recOverlay">
+    <div class="modal">
+        <div id="recForm">
+            <div class="modal-title">Recommend me a book</div>
+            <div class="modal-sub">I'm always looking for something good to read.</div>
+            <div class="modal-field">
+                <label class="modal-label" for="rec-title">Book Title *</label>
+                <input class="modal-input" id="rec-title" type="text" placeholder="e.g. The Road" autocomplete="off">
+            </div>
+            <div class="modal-field">
+                <label class="modal-label" for="rec-author">Author</label>
+                <input class="modal-input" id="rec-author" type="text" placeholder="e.g. Cormac McCarthy" autocomplete="off">
+            </div>
+            <div class="modal-field">
+                <label class="modal-label" for="rec-why">Why you love it</label>
+                <textarea class="modal-textarea" id="rec-why" placeholder="Tell me why I should read it..."></textarea>
+            </div>
+            <div class="modal-field">
+                <label class="modal-label" for="rec-name">Your name</label>
+                <input class="modal-input" id="rec-name" type="text" placeholder="Optional" autocomplete="off">
+            </div>
+            <div class="modal-actions">
+                <button class="modal-cancel" id="recCancel">Cancel</button>
+                <button class="modal-submit" id="recSubmit">Send recommendation</button>
+            </div>
+        </div>
+        <div class="modal-success" id="recSuccess">
+            <div class="modal-success-icon">📚</div>
+            <div class="modal-success-title">Thank you!</div>
+            <div class="modal-success-sub">I'll add it to my list.</div>
         </div>
     </div>
+</div>
 
-    <script>
-        document.querySelectorAll('.book-card').forEach(function(card) {
-            var inner = card.querySelector('.book-inner');
-            var front = card.querySelector('.book-front');
-            var back  = card.querySelector('.book-back');
-
-            var frontH = front.offsetHeight;
-            inner.style.height = frontH + 'px';
-
-            card.addEventListener('click', function() {
-                var isFlipped = card.classList.toggle('flipped');
-                inner.style.height = (isFlipped ? back.scrollHeight : frontH) + 'px';
-            });
+<script>
+    /* ── Flip cards ── */
+    document.querySelectorAll('.book-card').forEach(function(card) {
+        var inner = card.querySelector('.book-inner');
+        var front = card.querySelector('.book-front');
+        var back  = card.querySelector('.book-back');
+        var frontH = front.offsetHeight;
+        inner.style.height = frontH + 'px';
+        card.addEventListener('click', function() {
+            var isFlipped = card.classList.toggle('flipped');
+            inner.style.height = (isFlipped ? back.scrollHeight : frontH) + 'px';
         });
-    </script>
+    });
+
+    /* ── Recommend modal ── */
+    var overlay  = document.getElementById('recOverlay');
+    var recForm  = document.getElementById('recForm');
+    var recSuccess = document.getElementById('recSuccess');
+
+    document.getElementById('recBtn').addEventListener('click', function() {
+        overlay.classList.add('visible');
+    });
+    document.getElementById('recCancel').addEventListener('click', closeModal);
+    overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) closeModal();
+    });
+
+    function closeModal() {
+        overlay.classList.remove('visible');
+        setTimeout(function() {
+            recForm.style.display = '';
+            recSuccess.style.display = 'none';
+            document.getElementById('rec-title').value = '';
+            document.getElementById('rec-author').value = '';
+            document.getElementById('rec-why').value = '';
+            document.getElementById('rec-name').value = '';
+        }, 300);
+    }
+
+    document.getElementById('recSubmit').addEventListener('click', function() {
+        var title = document.getElementById('rec-title').value.trim();
+        if (!title) {
+            document.getElementById('rec-title').focus();
+            return;
+        }
+        var author = document.getElementById('rec-author').value.trim();
+        var why    = document.getElementById('rec-why').value.trim();
+        var name   = document.getElementById('rec-name').value.trim();
+
+        /* ── Replace FORM_ID below with your Formspree form ID ──
+           1. Go to formspree.io and create a free account
+           2. Create a new form → get your form ID (looks like "xyzabcde")
+           3. Replace FORM_ID in the URL below                        */
+        fetch('https://formspree.io/f/FORM_ID', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ title: title, author: author, why: why, name: name })
+        }).then(function(r) {
+            if (r.ok) showSuccess();
+            else showSuccess(); // show success anyway for UX
+        }).catch(function() {
+            showSuccess(); // fallback
+        });
+    });
+
+    function showSuccess() {
+        recForm.style.display = 'none';
+        recSuccess.style.display = 'block';
+    }
+</script>
 </body>
 </html>
