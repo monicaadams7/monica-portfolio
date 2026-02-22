@@ -8,7 +8,7 @@
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #EAF3F8; color: #1a1a1a; min-height: 100vh; -webkit-font-smoothing: antialiased; }
-        .page { max-width: 860px; margin: 0 auto; padding: 60px 24px 80px; }
+        .page { max-width: 900px; margin: 0 auto; padding: 60px 24px 80px; }
 
         .back { display: inline-flex; align-items: center; gap: 6px; font-size: .75rem; font-weight: 500; color: #999; text-decoration: none; letter-spacing: .3px; margin-bottom: 32px; transition: color .2s; }
         .back:hover { color: #333; }
@@ -17,49 +17,37 @@
         h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; }
         .subtitle { font-size: .85rem; color: #888; margin-bottom: 36px; line-height: 1.6; }
 
-        /* Hero — wide panoramic */
-        .photo-hero {
-            width: 100%;
-            height: 380px;
-            border-radius: 16px;
-            overflow: hidden;
-            margin-bottom: 12px;
-            box-shadow: 0 4px 24px rgba(0,0,0,.1);
-        }
-        .photo-hero img {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            object-position: center 55%;
-            display: block;
-            transition: transform .7s cubic-bezier(.25,.46,.45,.94);
-        }
-        .photo-hero:hover img { transform: scale(1.04); }
+        .grid { display: flex; flex-direction: column; gap: 10px; }
 
-        /* Bottom row — landscape (wider) + portrait (narrower) */
-        .photo-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 12px;
-        }
-        .photo-item {
-            border-radius: 16px;
+        /* Any photo container */
+        .p {
+            border-radius: 14px;
             overflow: hidden;
-            height: 420px;
-            box-shadow: 0 4px 24px rgba(0,0,0,.1);
+            box-shadow: 0 2px 16px rgba(0,0,0,.09);
+            flex-shrink: 0;
         }
-        .photo-item img {
+        .p img {
             width: 100%; height: 100%;
             object-fit: cover;
-            object-position: center top;
             display: block;
             transition: transform .7s cubic-bezier(.25,.46,.45,.94);
         }
-        .photo-item:hover img { transform: scale(1.04); }
+        .p:hover img { transform: scale(1.035); }
+
+        /* Full-width rows */
+        .row-full .p { height: 360px; }
+
+        /* Two-column rows */
+        .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .row-2 .p { height: 310px; }
+
+        /* Asymmetric: wide left, narrow right */
+        .row-asym { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; }
+        .row-asym .p { height: 380px; }
 
         @media (max-width: 600px) {
-            .photo-hero { height: 220px; }
-            .photo-row { grid-template-columns: 1fr; }
-            .photo-item { height: 280px; }
+            .row-2, .row-asym { grid-template-columns: 1fr; }
+            .row-full .p, .row-2 .p, .row-asym .p { height: 240px; }
         }
     </style>
 </head>
@@ -69,17 +57,36 @@
         <h1>Outdoor Enthusiast</h1>
         <div class="subtitle">Trail running, cycling, and everything outside.</div>
 
-        <div class="photo-hero">
-            <img src="outdoor1.jpg" alt="Alpine hiking in the mountains">
-        </div>
+        <div class="grid">
 
-        <div class="photo-row">
-            <div class="photo-item">
-                <img src="outdoor3.jpg" alt="Alabama Hills, Eastern Sierra" style="object-position: center 30%;">
+            <!-- Alpine panoramic hero -->
+            <div class="row-full">
+                <div class="p"><img src="outdoor1.jpg" alt="Alpine hiking" style="object-position: center 55%;"></div>
             </div>
-            <div class="photo-item">
-                <img src="outdoor2.jpg" alt="Summit in the snow">
+
+            <!-- Two Sierra lake shots -->
+            <div class="row-2">
+                <div class="p"><img src="outdoor4.jpg" alt="Rae Lakes, Sierra Nevada" style="object-position: center 40%;"></div>
+                <div class="p"><img src="outdoor5.jpg" alt="Sierra high country" style="object-position: center 35%;"></div>
             </div>
+
+            <!-- Desert rocks (wide) + Snow summit (portrait) -->
+            <div class="row-asym">
+                <div class="p"><img src="outdoor3.jpg" alt="Alabama Hills, Eastern Sierra" style="object-position: center 30%;"></div>
+                <div class="p"><img src="outdoor2.jpg" alt="Summit in the snow" style="object-position: center top;"></div>
+            </div>
+
+            <!-- Dogs in the meadow — full width, joyful break -->
+            <div class="row-full">
+                <div class="p"><img src="outdoor6.jpg" alt="Dogs in the meadow" style="object-position: center 60%;"></div>
+            </div>
+
+            <!-- B&W Marin landscapes pair -->
+            <div class="row-2">
+                <div class="p"><img src="outdoor7.jpg" alt="Mt. Tamalpais view, Marin" style="object-position: center 40%;"></div>
+                <div class="p"><img src="outdoor8.jpg" alt="Rolling hills above the fog" style="object-position: center 50%;"></div>
+            </div>
+
         </div>
     </div>
 </body>
