@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Inter', -apple-system, sans-serif;
-            background: #D0F2FF;
+            background: #EAF3F8;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -24,7 +24,7 @@
 
         /* ===== LOADER ===== */
         .loader {
-            position: fixed; inset: 0; background: #D0F2FF;
+            position: fixed; inset: 0; background: #EAF3F8;
             display: flex; align-items: center; justify-content: center;
             z-index: 200; transition: opacity .5s ease;
         }
@@ -870,21 +870,55 @@
     });
 
     var lp = linksPanel;
-    var lpDown = false, lpStartX, lpScrollLeft;
+    var lpDragging = false, lpStartX, lpScrollStart, lpMoved = false, lpVelocity = 0, lpRaf;
+    var lpHistory = [];
+
+    function lpDecay() {
+        if (Math.abs(lpVelocity) < 0.3) return;
+        lp.scrollLeft -= lpVelocity;
+        lpVelocity *= 0.95;
+        lpRaf = requestAnimationFrame(lpDecay);
+    }
+
     lp.addEventListener('mousedown', function(e) {
-        lpDown = true;
+        cancelAnimationFrame(lpRaf);
+        lpDragging = true;
+        lpMoved = false;
+        lpStartX = e.pageX;
+        lpScrollStart = lp.scrollLeft;
+        lpVelocity = 0;
+        lpHistory = [{x: e.pageX, t: Date.now()}];
         lp.style.cursor = 'grabbing';
-        lpStartX = e.pageX - lp.offsetLeft;
-        lpScrollLeft = lp.scrollLeft;
-    });
-    lp.addEventListener('mouseleave', function() { lpDown = false; lp.style.cursor = ''; });
-    lp.addEventListener('mouseup', function() { lpDown = false; lp.style.cursor = ''; });
-    lp.addEventListener('mousemove', function(e) {
-        if (!lpDown) return;
+        document.body.style.userSelect = 'none';
         e.preventDefault();
-        var x = e.pageX - lp.offsetLeft;
-        lp.scrollLeft = lpScrollLeft - (x - lpStartX) * 1.5;
     });
+
+    document.addEventListener('mousemove', function(e) {
+        if (!lpDragging) return;
+        if (Math.abs(e.pageX - lpStartX) > 4) lpMoved = true;
+        lp.scrollLeft = lpScrollStart - (e.pageX - lpStartX);
+        lpHistory.push({x: e.pageX, t: Date.now()});
+        if (lpHistory.length > 8) lpHistory.shift();
+    });
+
+    document.addEventListener('mouseup', function() {
+        if (!lpDragging) return;
+        lpDragging = false;
+        lp.style.cursor = '';
+        document.body.style.userSelect = '';
+        var now = Date.now();
+        var recent = lpHistory.filter(function(p) { return now - p.t < 80; });
+        if (recent.length >= 2) {
+            var dt = Math.max(1, recent[recent.length-1].t - recent[0].t);
+            lpVelocity = (recent[0].x - recent[recent.length-1].x) / dt * 14;
+        }
+        requestAnimationFrame(lpDecay);
+    });
+
+    // Block link navigation if the user was dragging
+    lp.addEventListener('click', function(e) {
+        if (lpMoved) { e.preventDefault(); e.stopPropagation(); lpMoved = false; }
+    }, true);
 
     document.getElementById('expLink').addEventListener('click', function() {
         history.replaceState(null, '', '#links');
