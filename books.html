@@ -7,30 +7,267 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #f5f5f3; color: #1a1a1a; min-height: 100vh; -webkit-font-smoothing: antialiased; }
-        .page { max-width: 600px; margin: 0 auto; padding: 60px 24px; }
+        body { font-family: 'Inter', sans-serif; background: #EAF3F8; color: #1a1a1a; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+        .page { max-width: 600px; margin: 0 auto; padding: 60px 24px 80px; }
         .back { display: inline-flex; align-items: center; gap: 6px; font-size: .75rem; font-weight: 500; color: #999; text-decoration: none; letter-spacing: .3px; margin-bottom: 32px; transition: color .2s; }
         .back:hover { color: #333; }
         .back svg { width: 14px; height: 14px; }
         h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; }
-        .subtitle { font-size: .85rem; color: #888; margin-bottom: 28px; line-height: 1.6; }
-        .book-list { list-style: none; display: flex; flex-direction: column; gap: 16px; }
-        .book-list li { font-size: .95rem; line-height: 1.5; color: #444; padding-left: 20px; position: relative; }
-        .book-list li::before { content: '\2014'; position: absolute; left: 0; color: #ccc; }
-        .book-title { font-weight: 600; color: #1a1a1a; }
-        .book-author { color: #888; font-size: .85rem; }
+        .subtitle { font-size: .85rem; color: #888; margin-bottom: 32px; line-height: 1.6; }
+
+        .book-list { display: flex; flex-direction: column; }
+
+        .book-card {
+            cursor: pointer;
+            border-bottom: 1px solid #d4e5ef;
+            perspective: 1000px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .book-card:first-child { border-top: 1px solid #d4e5ef; }
+
+        .book-inner {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+                        height 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .book-card.flipped .book-inner {
+            transform: rotateY(180deg);
+        }
+
+        .book-front {
+            padding: 13px 2px;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        .btitle {
+            font-size: .95rem;
+            font-weight: 500;
+            color: #1a1a1a;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            text-decoration-color: rgba(0,0,0,.28);
+            transition: text-decoration-color .2s;
+        }
+        .book-card:hover .btitle { text-decoration-color: #1a1a1a; }
+
+        .bauthor {
+            font-size: .76rem;
+            color: #aaa;
+            white-space: nowrap;
+        }
+
+        .book-back {
+            position: absolute;
+            top: 0; left: 0; width: 100%;
+            padding: 13px 2px;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transform: rotateY(180deg);
+        }
+
+        .book-back p {
+            font-size: .875rem;
+            line-height: 1.72;
+            color: #444;
+        }
+
+        .hint {
+            font-size: .65rem;
+            color: #bbb;
+            letter-spacing: .3px;
+            margin-bottom: 28px;
+        }
     </style>
 </head>
 <body>
     <div class="page">
-        <a class="back" href="experience.html"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg> Back</a>
+        <a class="back" href="experience.html">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
+            Back
+        </a>
         <h1>Favorite Books</h1>
         <div class="subtitle">A running list of books that shaped how I think.</div>
-        <ul class="book-list">
-            <li><span class="book-title">Book title here</span> <span class="book-author">Author</span></li>
-            <li><span class="book-title">Book title here</span> <span class="book-author">Author</span></li>
-            <li><span class="book-title">Book title here</span> <span class="book-author">Author</span></li>
-        </ul>
+        <div class="hint">Click any title to flip it.</div>
+
+        <div class="book-list">
+
+            <div class="book-card">
+                <div class="book-inner">
+                    <div class="book-front"><span class="btitle">Billy Summers</span><span class="bauthor">Stephen King</span></div>
+                    <div class="book-back"><p>King at his most human. A hitman who pretends to be dumb reads Steinbeck between kills — it's a thriller but really about storytelling and what we hide from the world. One of his best.</p></div>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-inner">
+                    <div class="book-front"><span class="btitle">The Dutch House</span><span class="bauthor">Ann Patchett</span></div>
+                    <div class="book-back"><p>Siblings who can't stop orbiting the house that shaped them. The prose is so clean it almost hurts — I kept reading sentences twice.</p></div>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-inner">
+                    <div class="book-front"><span class="btitle">Beneath a Scarlet Sky</span><span class="bauthor">Mark Sullivan</span></div>
+                    <div class="book-back"><p>Based on the true story of a teenage boy smuggling Jews over the Alps in WWII. Heart-stopping and completely unforgettable.</p></div>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-inner">
+                    <div class="book-front"><span class="btitle">When Breath Becomes Air</span><span class="bauthor">Paul Kalanithi</span></div>
+                    <div class="book-back"><p>A neurosurgeon diagnosed with terminal cancer writes about what makes life worth living. I've recommended this to every person I know.</p></div>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-inner">
+                    <div class="book-front"><span class="btitle">The Spy and the Traitor</span><span class="bauthor">Ben Macintyre</span></div>
+                    <div class="book-back"><p>The true story of the most valuable spy of the Cold War. Reads like a thriller but every word is real. Ben Macintyre is the best nonfiction writer alive.</p></div>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-inner">
+                    <div class="book-front"><span class="btitle">Tomorrow, and Tomorrow, and Tomorrow</span><span class="bauthor">Gabrielle Zevin</span></div>
+                    <div class="book-back"><p>About creativity, collaboration, and two people who love each other but can never quite figure out how. The video game world is just a backdrop for the most honest love story I've read.</p></div>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-inner">
+                    <div class="book-front"><span class="btitle">Cutting for Stone</span><span class="bauthor">Abraham Verghese</span></div>
+                    <div class="book-back"><p>Twin brothers born in Ethiopia, separated by fate. Medicine, love, identity, and war braided across continents and decades. Completely immersive.</p></div>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-inner">
+                    <div class="book-front"><span class="btitle">Babel</span><span class="bauthor">R.F. Kuang</span></div>
+                    <div class="book-back"><p>Dark academia about translation, colonialism, and empire. Oxford has never felt so sinister. Genuinely changed how I think about language.</p></div>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-inner">
+                    <div class="book-front"><span class="btitle">The Book Thief</span><span class="bauthor">Markus Zusak</span></div>
+                    <div class="book-back"><p>Narrated by Death during WWII. Liesel stealing books in wartime Germany is one of the most beautiful stories ever written.</p></div>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-inner">
+                    <div class="book-front"><span class="btitle">The Boy in the Striped Pajamas</span><span class="bauthor">John Boyne</span></div>
+                    <div class="book-back"><p>Two nine-year-olds on opposite sides of a concentration camp fence. The innocence is what destroys you.</p></div>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-inner">
+                    <div class="book-front"><span class="btitle">The Diary of a Young Girl</span><span class="bauthor">Anne Frank</span></div>
+                    <div class="book-back"><p>She was my age when she wrote this. That's all I keep thinking about. The humanity on every single page.</p></div>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-inner">
+                    <div class="book-front"><span class="btitle">The Martian</span><span class="bauthor">Andy Weir</span></div>
+                    <div class="book-back"><p>The most fun I've ever had reading about surviving alone on Mars. Mark Watney's voice is irresistible. Science has never been this funny.</p></div>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-inner">
+                    <div class="book-front"><span class="btitle">A Little Life</span><span class="bauthor">Hanya Yanagihara</span></div>
+                    <div class="book-back"><p>The most emotionally devastating book I've ever read. Four friends in New York, one carrying a trauma beyond imagination. You will cry. A lot.</p></div>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-inner">
+                    <div class="book-front"><span class="btitle">Circe</span><span class="bauthor">Madeline Miller</span></div>
+                    <div class="book-back"><p>The witch of Greek mythology finally speaks for herself. A story about power, solitude, and finding your own magic.</p></div>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-inner">
+                    <div class="book-front"><span class="btitle">Pachinko</span><span class="bauthor">Min Jin Lee</span></div>
+                    <div class="book-back"><p>Four generations of a Korean family in Japan across most of the twentieth century. Epic doesn't begin to cover it.</p></div>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-inner">
+                    <div class="book-front"><span class="btitle">Demon Copperhead</span><span class="bauthor">Barbara Kingsolver</span></div>
+                    <div class="book-back"><p>David Copperfield transplanted into Appalachia during the opioid crisis. Raw, real, and Pulitzer-winning for a reason.</p></div>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-inner">
+                    <div class="book-front"><span class="btitle">Horse</span><span class="bauthor">Geraldine Brooks</span></div>
+                    <div class="book-back"><p>A lost painting, a skeleton, and a legendary racehorse connect people across centuries. Brooks makes history feel urgent.</p></div>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-inner">
+                    <div class="book-front"><span class="btitle">The Song of Achilles</span><span class="bauthor">Madeline Miller</span></div>
+                    <div class="book-back"><p>Achilles and Patroclus retold as the love story it always was. I finished it on a plane and sat very still for a while afterward.</p></div>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-inner">
+                    <div class="book-front"><span class="btitle">Harry Potter</span><span class="bauthor">J.K. Rowling</span></div>
+                    <div class="book-back"><p>My whole childhood. The books that made me a reader. I find something new every time I reread them.</p></div>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-inner">
+                    <div class="book-front"><span class="btitle">On Writing</span><span class="bauthor">Stephen King</span></div>
+                    <div class="book-back"><p>Half memoir, half masterclass. The best book about writing I've ever read — and I'm not a writer. His voice is so alive on every page.</p></div>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-inner">
+                    <div class="book-front"><span class="btitle">The Catcher in the Rye</span><span class="bauthor">J.D. Salinger</span></div>
+                    <div class="book-back"><p>I actually loved this. Holden's anger felt so honest, and the loneliness underneath all that bravado hit close to home.</p></div>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-inner">
+                    <div class="book-front"><span class="btitle">Into Thin Air</span><span class="bauthor">Jon Krakauer</span></div>
+                    <div class="book-back"><p>Krakauer was on the 1996 Everest expedition that killed eight people and wrote about it immediately after. The best and most haunting adventure writing I've ever read.</p></div>
+                </div>
+            </div>
+
+        </div>
     </div>
+
+    <script>
+        document.querySelectorAll('.book-card').forEach(function(card) {
+            var inner = card.querySelector('.book-inner');
+            var front = card.querySelector('.book-front');
+            var back  = card.querySelector('.book-back');
+
+            var frontH = front.offsetHeight;
+            inner.style.height = frontH + 'px';
+
+            card.addEventListener('click', function() {
+                var isFlipped = card.classList.toggle('flipped');
+                inner.style.height = (isFlipped ? back.scrollHeight : frontH) + 'px';
+            });
+        });
+    </script>
 </body>
 </html>
