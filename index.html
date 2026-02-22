@@ -260,6 +260,10 @@
         .rc-barcode-wrap { text-align: center; margin: 10px 0 4px; }
         .rc-barcode { width: 170px; height: 44px; display: block; margin: 0 auto; }
         .rc-barcode-num { font-size: .48rem; letter-spacing: 3px; color: #ccc; margin-top: 4px; }
+        .rc-logo-sub { text-align: center; font-size: .58rem; letter-spacing: 3px; text-transform: uppercase; color: #999; margin-bottom: 3px; }
+        .rc-item-row { display: flex; justify-content: space-between; align-items: baseline; font-size: .72rem; line-height: 1.9; letter-spacing: .3px; }
+        .rc-stars { font-size: .55rem; color: #bbb; letter-spacing: 2px; flex-shrink: 0; margin-left: 8px; }
+        .rc-points { text-align: right; font-size: .6rem; letter-spacing: 1px; text-transform: uppercase; color: #888; margin-top: 3px; }
 
         .rc-logo {
             text-align: center;
@@ -626,40 +630,44 @@
         </button>
         <div class="receipt">
             <button class="rc-create" id="createBtn">Create your own</button>
-            <div class="rc-logo">MONICA</div>
-            <div class="rc-subtitle">About Me &bull; Mill Valley, CA</div>
+            <div class="rc-logo" style="font-size:1.3rem;">MONICA ADAMS</div>
+            <div class="rc-logo-sub">&amp; Co. &nbsp;·&nbsp; Est. 2003</div>
+            <div class="rc-subtitle">Mill Valley &nbsp;·&nbsp; UCLA '27</div>
             <div class="rc-meta"><span>NO.&nbsp;MA-260222-7</span><span>02/22/2026&nbsp;&nbsp;11:42 AM</span></div>
-            <div class="rc-cashier">CASHIER: LIFE &nbsp;&bull;&nbsp; TABLE: UCLA</div>
+            <div class="rc-cashier">SERVER: LIFE &nbsp;&bull;&nbsp; SEAT: UCLA</div>
 
             <hr class="rc-divider">
 
-            <div class="rc-row"><span class="rc-label">Location</span><span class="rc-value">Mill Valley, CA</span></div>
-            <div class="rc-row"><span class="rc-label">School</span><span class="rc-value">UCLA</span></div>
-            <div class="rc-row"><span class="rc-label">Status</span><span class="rc-value">Writing my story</span></div>
+            <div class="rc-row"><span class="rc-label">From</span><span class="rc-value">Mill Valley, CA</span></div>
+            <div class="rc-row"><span class="rc-label">Base</span><span class="rc-value">UCLA</span></div>
+            <div class="rc-row"><span class="rc-label">Pursuit</span><span class="rc-value">Writing my story</span></div>
 
             <hr class="rc-divider">
 
             <div class="rc-section-title">Experience</div>
-            <div class="rc-item">OpenAI ChatGPT Lab</div>
-            <div class="rc-item">Brain Cancer Research Lab, UCLA</div>
-            <div class="rc-item">Analyst Intern, SCGC</div>
-            <div class="rc-item">Co-author, <em>100 Chats</em></div>
+            <div class="rc-item-row"><span>OpenAI ChatGPT Lab</span><span class="rc-stars">★★★★★</span></div>
+            <div class="rc-item-row"><span>Nathanson Lab, UCLA</span><span class="rc-stars">★★★★★</span></div>
+            <div class="rc-item-row"><span>Analyst Intern, SCGC</span><span class="rc-stars">★★★★★</span></div>
+            <div class="rc-item-row"><span>Co-author, <em>100 Chats</em></span><span class="rc-stars">★★★★★</span></div>
 
             <hr class="rc-divider">
 
             <div class="rc-section-title">Interests</div>
-            <div class="rc-item">Trail running &amp; cycling</div>
-            <div class="rc-item">National-level tennis</div>
-            <div class="rc-item">AI, science &amp; discovery</div>
-            <div class="rc-item">Reading everything in sight</div>
+            <div class="rc-item-row"><span>Trail running &amp; cycling</span><span class="rc-stars">★★★★★</span></div>
+            <div class="rc-item-row"><span>National-level tennis</span><span class="rc-stars">★★★★★</span></div>
+            <div class="rc-item-row"><span>AI, science &amp; discovery</span><span class="rc-stars">★★★★★</span></div>
+            <div class="rc-item-row"><span>Reading everything in sight</span><span class="rc-stars">★★★★★</span></div>
 
             <hr class="rc-divider">
 
+            <div class="rc-row" style="opacity:.55;"><span class="rc-label">Subtotal</span><span class="rc-value">∞ Passions</span></div>
+            <div class="rc-row" style="opacity:.55;"><span class="rc-label">Enthusiasm Tax</span><span class="rc-value">Incl.</span></div>
+            <hr class="rc-divider" style="border-top: 1.5px solid #333;">
             <div class="rc-total">
-                <span class="rc-total-label">Total Passions</span>
-                <span class="rc-total-value">&infin;</span>
+                <span class="rc-total-label">Total</span>
+                <span class="rc-total-value">Priceless</span>
             </div>
-            <div class="rc-note">(enthusiasm tax incl.)</div>
+            <div class="rc-points">Passion pts earned &nbsp;+&infin;</div>
 
             <hr class="rc-divider">
 
@@ -671,10 +679,6 @@
             <div class="rc-footer">Thank you for reading &bull; Come again</div>
 
             <hr class="rc-divider">
-            <div class="rc-pay-row"><span class="rc-pay-label">Payment</span><span class="rc-pay-val">VISA ****2027</span></div>
-            <div class="rc-pay-row"><span class="rc-pay-label">Auth Code</span><span class="rc-pay-val">742-891</span></div>
-            <div class="rc-stamp-wrap"><span class="rc-stamp">APPROVED</span></div>
-            <hr class="rc-divider">
 
             <div class="rc-barcode-wrap">
                 <svg class="rc-barcode" viewBox="0 0 200 44" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
@@ -682,7 +686,7 @@
                 </svg>
                 <div class="rc-barcode-num">2 04823 19104 7</div>
             </div>
-            <div class="rc-footer" style="margin-top:6px;">&#x2605; CUSTOMER COPY &#x2605;</div>
+            <div class="rc-footer" style="margin-top:6px;">&#x2605; Keep This Receipt &#x2605;</div>
         </div>
     </div>
 
