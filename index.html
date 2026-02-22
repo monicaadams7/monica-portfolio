@@ -155,6 +155,7 @@
             cursor: grab;
         }
         .links-panel::-webkit-scrollbar { display: none; }
+        .links-panel.is-dragging, .links-panel.is-dragging * { cursor: grabbing !important; }
 
         .links-panel.visible {
             opacity: 1; pointer-events: auto;
@@ -913,9 +914,8 @@
         lpScrollStart = lp.scrollLeft;
         lpVelocity = 0;
         lpHistory = [{x: e.pageX, t: Date.now()}];
-        lp.style.cursor = 'grabbing';
+        lp.classList.add('is-dragging');
         document.body.style.userSelect = 'none';
-        e.preventDefault();
     });
 
     document.addEventListener('mousemove', function(e) {
@@ -929,7 +929,7 @@
     document.addEventListener('mouseup', function() {
         if (!lpDragging) return;
         lpDragging = false;
-        lp.style.cursor = '';
+        lp.classList.remove('is-dragging');
         document.body.style.userSelect = '';
         var now = Date.now();
         var recent = lpHistory.filter(function(p) { return now - p.t < 80; });
