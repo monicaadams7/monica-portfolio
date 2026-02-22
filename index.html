@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monica Adams</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #f5f5f3;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+        }
+
+        /* ===== LOADER ===== */
+        .loader {
+            position: fixed; inset: 0; background: #f5f5f3;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 200; transition: opacity .5s ease;
+        }
+        .loader.done { opacity: 0; pointer-events: none; }
+        .loader-pct {
+            font-size: .55rem; font-weight: 500; letter-spacing: 1.5px;
+            color: #bbb; font-variant-numeric: tabular-nums;
+        }
+
+        /* ===== PILL ===== */
+        .pill {
+            position: relative;
+            background: #1a1a1a;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            padding: 6px;
+            gap: 0;
+            cursor: pointer;
+            transition: width .55s cubic-bezier(.32,.72,0,1),
+                        padding .55s cubic-bezier(.32,.72,0,1),
+                        gap .55s cubic-bezier(.32,.72,0,1),
+                        opacity .3s ease, transform .3s ease;
+            width: 52px;
+            height: 52px;
+            overflow: hidden;
+            user-select: none;
+            opacity: 0;
+        }
+
+        .pill.visible { opacity: 1; }
+        .pill.hidden { opacity: 0; transform: scale(.85); pointer-events: none; }
+
+        .pill.expanded {
+            width: 380px;
+            padding: 8px 10px 8px 8px;
+            cursor: default;
+            gap: 12px;
+        }
+
+        /* ===== AVATAR ===== */
+        .avatar {
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e8e0d6, #c8beb0);
+            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: .85rem; font-weight: 600; color: #888;
+            cursor: pointer;
+            transition: transform .3s;
+        }
+
+        .pill:not(.expanded) .avatar:hover { transform: scale(1.05); }
+
+        /* ===== PILL TEXT ===== */
+        .pill-text {
+            display: flex; flex-direction: column;
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateX(-8px);
+            transition: opacity .3s ease .15s, transform .3s ease .15s;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .pill.expanded .pill-text {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .pill-hello {
+            font-size: .65rem; font-weight: 400; color: #888;
+            letter-spacing: .3px; line-height: 1.2;
+        }
+        .pill-name {
+            font-size: 1.05rem; font-weight: 700; color: #fff;
+            line-height: 1.25;
+        }
+
+        /* ===== PILL BUTTONS ===== */
+        .pill-actions {
+            display: flex; gap: 8px; align-items: center;
+            flex-shrink: 0;
+            opacity: 0;
+            transform: translateX(-6px);
+            transition: opacity .3s ease .25s, transform .3s ease .25s;
+        }
+
+        .pill.expanded .pill-actions {
+            opacity: 1; transform: translateX(0);
+        }
+
+        .pill-btn {
+            width: 38px; height: 38px;
+            border-radius: 50%; border: none;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform .2s, filter .2s;
+            flex-shrink: 0;
+        }
+
+        .pill-btn:hover { transform: scale(1.08); }
+        .pill-btn:active { transform: scale(.95); }
+
+        .pill-btn.orange { background: #f0923a; }
+        .pill-btn.blue { background: #4a8ef7; }
+        .pill-btn svg { width: 18px; height: 18px; color: #fff; }
+
+        /* ===== LINKS BAR (horizontal scroll, replaces pill) ===== */
+        .links-panel {
+            position: absolute;
+            background: #1a1a1a;
+            border-radius: 60px;
+            padding: 7px 8px;
+            display: flex; gap: 6px; align-items: center;
+            opacity: 0; transform: scale(.85);
+            pointer-events: none;
+            transition: opacity .35s ease, transform .35s cubic-bezier(.32,.72,0,1);
+            max-width: 90vw;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .links-panel::-webkit-scrollbar { display: none; }
+
+        .links-panel.visible {
+            opacity: 1; pointer-events: auto;
+            transform: scale(1);
+        }
+
+        .links-back {
+            width: 38px; height: 38px;
+            border-radius: 50%; border: none;
+            background: #2a2a2a; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background .2s, transform .15s;
+            flex-shrink: 0;
+        }
+        .links-back:hover { background: #3a3a3a; transform: scale(1.05); }
+        .links-back svg { width: 16px; height: 16px; color: #999; }
+
+        .link-chip {
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 18px;
+            border-radius: 30px;
+            background: #2a2a2a;
+            color: #bbb;
+            text-decoration: none;
+            font-size: .78rem; font-weight: 500;
+            letter-spacing: .2px;
+            transition: background .2s, color .2s, transform .15s;
+            white-space: nowrap;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .link-chip:hover { background: #3a3a3a; color: #fff; }
+        .link-chip svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+        /* ===== ABOUT ME OVERLAY ===== */
+        .about-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,.55);
+            z-index: 150;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity .4s ease;
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+        }
+
+        .about-overlay.visible { opacity: 1; pointer-events: auto; }
+
+        .about-close {
+            position: absolute; top: 16px; right: 16px;
+            width: 28px; height: 28px; border-radius: 50%;
+            background: transparent; border: none;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            opacity: .35; transition: opacity .2s;
+            z-index: 10;
+        }
+        .about-close:hover { opacity: .7; }
+        .about-close svg { width: 14px; height: 14px; color: #333; }
+
+        /* ===== RECEIPT ===== */
+        .receipt {
+            width: 380px; max-width: 90vw;
+            background: #faf8f4;
+            padding: 40px 32px 48px;
+            position: relative;
+            box-shadow: 0 8px 40px rgba(0,0,0,.2);
+            font-family: 'Courier New', Courier, monospace;
+            color: #1a1a1a;
+            transform: translateY(30px) scale(.95);
+            opacity: 0;
+            transition: transform .5s cubic-bezier(.22,1,.36,1), opacity .4s ease;
+            overflow: hidden;
+        }
+
+        .receipt::before, .receipt::after {
+            content: '';
+            position: absolute; left: 0; right: 0;
+            height: 12px;
+            background: linear-gradient(135deg, #faf8f4 33.33%, transparent 33.33%,
+                transparent 66.66%, #faf8f4 66.66%),
+                linear-gradient(225deg, #faf8f4 33.33%, transparent 33.33%,
+                transparent 66.66%, #faf8f4 66.66%);
+            background-size: 16px 12px;
+        }
+        .receipt::before { top: -6px; }
+        .receipt::after { bottom: -6px; transform: rotate(180deg); }
+
+        .about-overlay.visible .receipt {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        .rc-logo {
+            text-align: center;
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .rc-subtitle {
+            text-align: center;
+            font-size: .6rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 16px;
+        }
+
+        .rc-divider {
+            border: none;
+            border-top: 2px dashed #ccc;
+            margin: 14px 0;
+        }
+
+        .rc-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: .72rem;
+            line-height: 2;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+        }
+
+        .rc-row .rc-label { color: #888; }
+        .rc-row .rc-value { font-weight: 700; text-align: right; }
+
+        .rc-section-title {
+            font-size: .6rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #aaa;
+            margin-top: 6px;
+            margin-bottom: 4px;
+        }
+
+        .rc-item {
+            font-size: .72rem;
+            line-height: 1.9;
+            letter-spacing: .3px;
+            padding-left: 12px;
+            text-indent: -12px;
+        }
+
+        .rc-item::before {
+            content: '\2022';
+            margin-right: 6px;
+            color: #ccc;
+        }
+
+        .rc-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-top: 4px;
+        }
+
+        .rc-total-label {
+            font-size: .85rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .rc-total-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .rc-note {
+            text-align: center;
+            font-size: .55rem;
+            color: #aaa;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        .rc-photo {
+            display: block;
+            width: 120px; height: 120px;
+            object-fit: cover;
+            object-position: center top;
+            border-radius: 4px;
+            margin: 0 auto 12px;
+            filter: grayscale(1) contrast(1.1);
+        }
+
+        .rc-signoff {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: .85rem;
+            color: #555;
+            margin-top: 6px;
+            letter-spacing: .5px;
+        }
+
+        .rc-create {
+            position: absolute;
+            top: 14px; right: 14px;
+            background: #1a1a1a;
+            color: #ddd;
+            border: none;
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: .6rem;
+            font-weight: 600;
+            letter-spacing: .5px;
+            cursor: pointer;
+            transition: background .2s, color .2s, transform .15s;
+            z-index: 5;
+        }
+        .rc-create:hover { background: #333; color: #fff; transform: scale(1.03); }
+
+        .rc-footer {
+            text-align: center;
+            font-size: .55rem;
+            color: #bbb;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-top: 16px;
+        }
+
+        @media (max-width: 500px) {
+            .pill.expanded { width: 320px; }
+            .receipt { padding: 32px 24px 40px; width: 340px; }
+            .exp-card { padding: 36px 28px 32px; }
+            .link-chip { padding: 10px 14px; font-size: .72rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader" id="loader"><span class="loader-pct" id="pct">1%</span></div>
+
+    <div class="pill" id="pill">
+        <div class="avatar" id="avatar">M</div>
+        <div class="pill-text">
+            <span class="pill-hello">Hello, I'm</span>
+            <span class="pill-name">Monica</span>
+        </div>
+        <div class="pill-actions">
+            <button class="pill-btn orange" id="bioBtn" aria-label="About me">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" /></svg>
+            </button>
+            <button class="pill-btn blue" id="linksBtn" aria-label="Links">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="6" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="18" r="2"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="links-panel" id="linksPanel">
+        <button class="links-back" id="linksBack" aria-label="Back">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
+        </button>
+        <a class="link-chip" href="https://substack.com/@monicakadams" target="_blank" rel="noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"/></svg>
+            Substack
+        </a>
+        <a class="link-chip" href="https://www.linkedin.com/in/monicakadams/" target="_blank" rel="noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg>
+            LinkedIn
+        </a>
+        <a class="link-chip" href="experience.html">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z"/></svg>
+            Experience
+        </a>
+    </div>
+
+    <div class="about-overlay" id="aboutOverlay">
+        <button class="about-close" id="aboutClose" aria-label="Close">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+        </button>
+        <div class="receipt">
+            <button class="rc-create" id="createBtn">Create your own</button>
+            <div class="rc-logo">MONICA</div>
+            <div class="rc-subtitle">About Me &bull; Mill Valley, CA</div>
+
+            <hr class="rc-divider">
+
+            <div class="rc-row"><span class="rc-label">Location</span><span class="rc-value">Mill Valley, CA</span></div>
+            <div class="rc-row"><span class="rc-label">School</span><span class="rc-value">UCLA</span></div>
+            <div class="rc-row"><span class="rc-label">Status</span><span class="rc-value">Writing my story</span></div>
+
+            <hr class="rc-divider">
+
+            <div class="rc-section-title">Experience</div>
+            <div class="rc-item">OpenAI ChatGPT Lab</div>
+            <div class="rc-item">Brain Cancer Research Lab, UCLA</div>
+            <div class="rc-item">Analyst Intern, SCGC</div>
+            <div class="rc-item">Co-author, <em>100 Chats</em></div>
+
+            <hr class="rc-divider">
+
+            <div class="rc-section-title">Interests</div>
+            <div class="rc-item">Trail running &amp; cycling</div>
+            <div class="rc-item">National-level tennis</div>
+            <div class="rc-item">AI, science &amp; discovery</div>
+            <div class="rc-item">Reading everything in sight</div>
+
+            <hr class="rc-divider">
+
+            <div class="rc-total">
+                <span class="rc-total-label">Total Passions</span>
+                <span class="rc-total-value">&infin;</span>
+            </div>
+            <div class="rc-note">(enthusiasm tax incl.)</div>
+
+            <hr class="rc-divider">
+
+            <img class="rc-photo" src="monica.png" alt="Monica Adams">
+            <div class="rc-signoff">Sincerely, Monica</div>
+
+            <hr class="rc-divider">
+
+            <div class="rc-footer">Thank you for reading &bull; Come again</div>
+        </div>
+    </div>
+
+<script>
+(function() {
+    var pctEl = document.getElementById('pct');
+    var loader = document.getElementById('loader');
+    var pill = document.getElementById('pill');
+    var avatar = document.getElementById('avatar');
+    var bioBtn = document.getElementById('bioBtn');
+    var linksBtn = document.getElementById('linksBtn');
+    var linksPanel = document.getElementById('linksPanel');
+    var aboutOverlay = document.getElementById('aboutOverlay');
+    var aboutClose = document.getElementById('aboutClose');
+    var linksBack = document.getElementById('linksBack');
+
+    var v = 0;
+    var showingLinks = false;
+
+    var tick = setInterval(function() {
+        var jump = v < 30 ? Math.random() * 4 + 1
+                 : v < 70 ? Math.random() * 3 + .5
+                 : v < 90 ? Math.random() * 2 + .3
+                 : Math.random() * 1.5 + .5;
+        v = Math.min(100, v + jump);
+        pctEl.textContent = Math.floor(v) + '%';
+        if (v >= 100) {
+            clearInterval(tick);
+            setTimeout(function() {
+                loader.classList.add('done');
+                if (window.location.hash === '#links') {
+                    setTimeout(function() {
+                        pill.classList.add('visible');
+                        pill.classList.add('hidden');
+                        linksPanel.classList.add('visible');
+                        showingLinks = true;
+                        history.replaceState(null, '', window.location.pathname);
+                    }, 400);
+                } else {
+                    setTimeout(function() { pill.classList.add('visible'); }, 400);
+                }
+            }, 300);
+        }
+    }, 30);
+
+    avatar.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (!pill.classList.contains('expanded')) {
+            pill.classList.add('expanded');
+        } else {
+            pill.classList.remove('expanded');
+        }
+    });
+
+    bioBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        aboutOverlay.classList.add('visible');
+    });
+
+    linksBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        pill.classList.add('hidden');
+        setTimeout(function() { linksPanel.classList.add('visible'); showingLinks = true; }, 200);
+    });
+
+    linksBack.addEventListener('click', function(e) {
+        e.stopPropagation();
+        linksPanel.classList.remove('visible');
+        showingLinks = false;
+        setTimeout(function() { pill.classList.remove('hidden'); }, 200);
+    });
+
+    aboutClose.addEventListener('click', function() {
+        aboutOverlay.classList.remove('visible');
+    });
+
+    aboutOverlay.addEventListener('click', function(e) {
+        if (e.target === aboutOverlay) aboutOverlay.classList.remove('visible');
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            if (aboutOverlay.classList.contains('visible')) {
+                aboutOverlay.classList.remove('visible');
+            } else if (showingLinks) {
+                linksPanel.classList.remove('visible'); showingLinks = false;
+                setTimeout(function() { pill.classList.remove('hidden'); }, 200);
+            } else if (pill.classList.contains('expanded')) {
+                pill.classList.remove('expanded');
+            }
+        }
+    });
+})();
+</script>
+</body>
+</html>

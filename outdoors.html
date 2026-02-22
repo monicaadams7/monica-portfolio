@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outdoors — Monica Adams</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f5f3; color: #1a1a1a; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+        .page { max-width: 800px; margin: 0 auto; padding: 60px 24px; }
+        .back { display: inline-flex; align-items: center; gap: 6px; font-size: .75rem; font-weight: 500; color: #999; text-decoration: none; letter-spacing: .3px; margin-bottom: 32px; transition: color .2s; }
+        .back:hover { color: #333; }
+        .back svg { width: 14px; height: 14px; }
+        h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; }
+        .subtitle { font-size: .85rem; color: #888; margin-bottom: 28px; line-height: 1.6; }
+        .collage { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+        .collage-placeholder {
+            aspect-ratio: 1;
+            background: #e0e0de;
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: .7rem; color: #aaa; letter-spacing: 1px; text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <a class="back" href="experience.html"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg> Back</a>
+        <h1>Outdoor Enthusiast</h1>
+        <div class="subtitle">Trail running, cycling, and everything outside.</div>
+        <div class="collage">
+            <div class="collage-placeholder">Photo 1</div>
+            <div class="collage-placeholder">Photo 2</div>
+            <div class="collage-placeholder">Photo 3</div>
+            <div class="collage-placeholder">Photo 4</div>
+            <div class="collage-placeholder">Photo 5</div>
+            <div class="collage-placeholder">Photo 6</div>
+        </div>
+    </div>
+</body>
+</html>
