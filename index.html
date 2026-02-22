@@ -218,35 +218,23 @@
 
         /* ===== RECEIPT ===== */
         .receipt {
-            width: 380px; max-width: 90vw;
-            background: #fdf9f3;
-            padding: 40px 32px 48px;
+            width: 360px; max-width: 90vw;
+            background: #fff;
+            padding: 32px 28px 36px;
             position: relative;
-            box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 6px 24px rgba(0,0,0,.13), 0 22px 52px rgba(0,0,0,.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,.08), 0 8px 28px rgba(0,0,0,.1);
             font-family: 'Courier New', Courier, monospace;
             color: #1a1a1a;
             transform: translateY(30px) scale(.95);
             opacity: 0;
             transition: transform .5s cubic-bezier(.22,1,.36,1), opacity .4s ease;
             overflow: hidden;
-            background-image: repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(0,0,0,.018) 23px, rgba(0,0,0,.018) 24px);
         }
 
-        .receipt::before, .receipt::after {
-            content: '';
-            position: absolute; left: 0; right: 0;
-            height: 12px;
-            background: linear-gradient(135deg, #fdf9f3 33.33%, transparent 33.33%,
-                transparent 66.66%, #fdf9f3 66.66%),
-                linear-gradient(225deg, #fdf9f3 33.33%, transparent 33.33%,
-                transparent 66.66%, #fdf9f3 66.66%);
-            background-size: 16px 12px;
-        }
-        .receipt::before { top: -6px; }
-        .receipt::after { bottom: -6px; transform: rotate(180deg); }
+        .receipt::before, .receipt::after { display: none; }
 
         .about-overlay.visible .receipt {
-            transform: translateY(0) scale(1) rotate(0.5deg);
+            transform: translateY(0) scale(1);
             opacity: 1;
         }
 
@@ -264,6 +252,12 @@
         .rc-item-row { display: flex; justify-content: space-between; align-items: baseline; font-size: .72rem; line-height: 1.9; letter-spacing: .3px; }
         .rc-stars { font-size: .55rem; color: #bbb; letter-spacing: 2px; flex-shrink: 0; margin-left: 8px; }
         .rc-points { text-align: right; font-size: .6rem; letter-spacing: 1px; text-transform: uppercase; color: #888; margin-top: 3px; }
+        .rc-activity-title { text-align: center; font-size: .8rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; line-height: 1.55; margin-bottom: 5px; }
+        .rc-col-header { display: flex; justify-content: space-between; font-size: .55rem; letter-spacing: 1.5px; text-transform: uppercase; color: #aaa; padding-bottom: 5px; margin-bottom: 2px; border-bottom: 1px solid #eee; }
+        .rc-count-row { display: flex; justify-content: space-between; align-items: baseline; font-size: .78rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 5px 0 2px; }
+        .rc-sub-item { font-size: .66rem; color: #666; letter-spacing: .8px; padding-left: 18px; line-height: 1.9; text-transform: uppercase; }
+        .rc-check { font-size: .67rem; letter-spacing: 1px; line-height: 2.2; text-transform: uppercase; color: #555; }
+        .rc-footer-sub { text-align: center; font-size: .5rem; letter-spacing: 2px; text-transform: uppercase; color: #bbb; margin-top: 3px; }
 
         .rc-logo {
             text-align: center;
@@ -630,53 +624,51 @@
         </button>
         <div class="receipt">
             <button class="rc-create" id="createBtn">Create your own</button>
-            <div class="rc-logo" style="font-size:1.3rem;">MONICA ADAMS</div>
+            <div class="rc-logo" style="font-size:1.4rem;letter-spacing:6px;">MONICA ADAMS</div>
             <div class="rc-logo-sub">&amp; Co. &nbsp;·&nbsp; Est. 2003</div>
-            <div class="rc-subtitle">Mill Valley &nbsp;·&nbsp; UCLA '27</div>
-            <div class="rc-meta"><span>NO.&nbsp;MA-260222-7</span><span>02/22/2026&nbsp;&nbsp;11:42 AM</span></div>
-            <div class="rc-cashier">SERVER: LIFE &nbsp;&bull;&nbsp; SEAT: UCLA</div>
+            <div class="rc-activity-title">Student · Researcher<br>Builder · Writer</div>
+            <div class="rc-subtitle" style="margin-bottom:3px;">Mill Valley, California</div>
+            <div class="rc-meta"><span>No.&nbsp;MA-260222-7</span><span>02/22/2026&nbsp;&nbsp;11:42 AM</span></div>
+            <div class="rc-cashier">Server: Life &nbsp;&bull;&nbsp; Seat: UCLA</div>
 
             <hr class="rc-divider">
 
-            <div class="rc-row"><span class="rc-label">From</span><span class="rc-value">Mill Valley, CA</span></div>
-            <div class="rc-row"><span class="rc-label">Base</span><span class="rc-value">UCLA</span></div>
-            <div class="rc-row"><span class="rc-label">Pursuit</span><span class="rc-value">Writing my story</span></div>
+            <div class="rc-col-header"><span>Type</span><span>Count</span></div>
+
+            <div class="rc-count-row"><span>Experience</span><span>4</span></div>
+            <div class="rc-sub-item">OpenAI ChatGPT Lab</div>
+            <div class="rc-sub-item">Nathanson Lab, UCLA</div>
+            <div class="rc-sub-item">Analyst Intern, SCGC</div>
+            <div class="rc-sub-item">Co-Author, 100 Chats</div>
 
             <hr class="rc-divider">
 
-            <div class="rc-section-title">Experience</div>
-            <div class="rc-item-row"><span>OpenAI ChatGPT Lab</span><span class="rc-stars">★★★★★</span></div>
-            <div class="rc-item-row"><span>Nathanson Lab, UCLA</span><span class="rc-stars">★★★★★</span></div>
-            <div class="rc-item-row"><span>Analyst Intern, SCGC</span><span class="rc-stars">★★★★★</span></div>
-            <div class="rc-item-row"><span>Co-author, <em>100 Chats</em></span><span class="rc-stars">★★★★★</span></div>
+            <div class="rc-count-row"><span>Interests</span><span>4</span></div>
+            <div class="rc-sub-item">Trail Running &amp; Cycling</div>
+            <div class="rc-sub-item">National-Level Tennis</div>
+            <div class="rc-sub-item">AI, Science &amp; Discovery</div>
+            <div class="rc-sub-item">Reading Everything in Sight</div>
 
             <hr class="rc-divider">
 
-            <div class="rc-section-title">Interests</div>
-            <div class="rc-item-row"><span>Trail running &amp; cycling</span><span class="rc-stars">★★★★★</span></div>
-            <div class="rc-item-row"><span>National-level tennis</span><span class="rc-stars">★★★★★</span></div>
-            <div class="rc-item-row"><span>AI, science &amp; discovery</span><span class="rc-stars">★★★★★</span></div>
-            <div class="rc-item-row"><span>Reading everything in sight</span><span class="rc-stars">★★★★★</span></div>
-
-            <hr class="rc-divider">
-
-            <div class="rc-row" style="opacity:.55;"><span class="rc-label">Subtotal</span><span class="rc-value">∞ Passions</span></div>
-            <div class="rc-row" style="opacity:.55;"><span class="rc-label">Enthusiasm Tax</span><span class="rc-value">Incl.</span></div>
-            <hr class="rc-divider" style="border-top: 1.5px solid #333;">
             <div class="rc-total">
-                <span class="rc-total-label">Total</span>
-                <span class="rc-total-value">Priceless</span>
+                <span class="rc-total-label">Total Passions</span>
+                <span class="rc-total-value">&infin;</span>
             </div>
-            <div class="rc-points">Passion pts earned &nbsp;+&infin;</div>
+            <div class="rc-note">(Enthusiasm Tax Incl.)</div>
 
             <hr class="rc-divider">
 
+            <div class="rc-section-label">Photos</div>
             <img class="rc-photo" src="monica.png" alt="Monica Adams">
             <div class="rc-signoff">Sincerely, Monica</div>
 
             <hr class="rc-divider">
 
-            <div class="rc-footer">Thank you for reading &bull; Come again</div>
+            <div class="rc-section-label">Suggested</div>
+            <div class="rc-check">[ ] Connect on LinkedIn</div>
+            <div class="rc-check">[ ] Read 100 Chats</div>
+            <div class="rc-check">[ ] Follow on Substack</div>
 
             <hr class="rc-divider">
 
@@ -686,7 +678,8 @@
                 </svg>
                 <div class="rc-barcode-num">2 04823 19104 7</div>
             </div>
-            <div class="rc-footer" style="margin-top:6px;">&#x2605; Keep This Receipt &#x2605;</div>
+            <div class="rc-footer" style="margin-top:6px;">&lt;&lt; Keep This Receipt &gt;&gt;</div>
+            <div class="rc-footer-sub">monicaadams7.github.io</div>
         </div>
     </div>
 
