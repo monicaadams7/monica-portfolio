@@ -260,14 +260,19 @@
         .rc-check { font-size: .67rem; letter-spacing: 1px; line-height: 2.2; text-transform: uppercase; color: #555; }
         .rc-footer-sub { text-align: center; font-size: .5rem; letter-spacing: 2px; text-transform: uppercase; color: #bbb; margin-top: 3px; }
 
+        .receipt-wrapper { position: relative; }
+
         .rc-logo {
             text-align: center;
-            font-size: 1.6rem;
-            font-weight: 700;
-            letter-spacing: 4px;
-            text-transform: uppercase;
+            font-family: 'UnifrakturCook', cursive;
+            font-size: 1.85rem;
+            font-weight: 400;
+            letter-spacing: 2px;
             margin-bottom: 2px;
         }
+
+        .rc-exp-row { display: flex; justify-content: space-between; align-items: baseline; font-size: .66rem; color: #555; letter-spacing: .8px; line-height: 2; text-transform: uppercase; }
+        .rc-exp-row span:last-child { color: #aaa; font-size: .6rem; }
 
         .rc-subtitle {
             text-align: center;
@@ -349,11 +354,11 @@
 
         .rc-photo {
             display: block;
-            width: 120px; height: 120px;
+            width: 155px; height: 205px;
             object-fit: cover;
             object-position: center top;
-            border-radius: 4px;
-            margin: 0 auto 12px;
+            border-radius: 0;
+            margin: 8px auto 14px;
             filter: grayscale(1) contrast(1.1);
         }
 
@@ -369,7 +374,7 @@
 
         .rc-create {
             position: absolute;
-            top: 14px; right: 14px;
+            top: -44px; right: 0;
             background: #1a1a1a;
             color: #ddd;
             border: none;
@@ -623,32 +628,35 @@
         <button class="about-close" id="aboutClose" aria-label="Close">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
         </button>
+        <div class="receipt-wrapper">
+        <button class="rc-create" id="createBtn">Create your own</button>
         <div class="receipt">
-            <button class="rc-create" id="createBtn">Create your own</button>
-            <div class="rc-logo" style="font-size:1.4rem;letter-spacing:6px;">MONICA ADAMS</div>
+            <div class="rc-logo">Monica Adams</div>
             <div class="rc-logo-sub">&amp; Co. &nbsp;·&nbsp; Est. 2003</div>
             <div class="rc-activity-title">Student · Researcher<br>Builder · Writer</div>
             <div class="rc-subtitle" style="margin-bottom:3px;">Mill Valley, California</div>
             <div class="rc-meta"><span>No.&nbsp;MA-260222-7</span><span>02/22/2026&nbsp;&nbsp;11:42 AM</span></div>
-            <div class="rc-cashier">Server: Life &nbsp;&bull;&nbsp; Seat: UCLA</div>
 
             <hr class="rc-divider">
 
-            <div class="rc-col-header"><span>Type</span><span>Count</span></div>
-
-            <div class="rc-count-row"><span>Experience</span><span>4</span></div>
-            <div class="rc-sub-item">OpenAI ChatGPT Lab</div>
-            <div class="rc-sub-item">Nathanson Lab, UCLA</div>
-            <div class="rc-sub-item">Analyst Intern, SCGC</div>
-            <div class="rc-sub-item">Co-Author, 100 Chats</div>
+            <div class="rc-count-row"><span>Experience</span></div>
+            <div class="rc-exp-row"><span>Analyst Intern, SCGC</span><span>Feb 2026</span></div>
+            <div class="rc-exp-row"><span>ChatGPT Lab, OpenAI</span><span>Jan 2025</span></div>
+            <div class="rc-exp-row"><span>Research Asst., Nathanson Lab</span><span>Nov 2025</span></div>
+            <div class="rc-exp-row"><span>Intern, Minimis</span><span>Summer 2025</span></div>
 
             <hr class="rc-divider">
 
-            <div class="rc-count-row"><span>Interests</span><span>4</span></div>
-            <div class="rc-sub-item">Trail Running &amp; Cycling</div>
-            <div class="rc-sub-item">National-Level Tennis</div>
-            <div class="rc-sub-item">AI, Science &amp; Discovery</div>
-            <div class="rc-sub-item">Reading Everything in Sight</div>
+            <div class="rc-count-row"><span>Interests</span></div>
+            <div class="rc-sub-item">Trail Running</div>
+            <div class="rc-sub-item">Endurance Athlete</div>
+            <div class="rc-sub-item">Cycling</div>
+            <div class="rc-sub-item">Competitive Tennis</div>
+            <div class="rc-sub-item">Backpacking</div>
+            <div class="rc-sub-item">Cross Country Skiing</div>
+            <div class="rc-sub-item">AI</div>
+            <div class="rc-sub-item">Computational Biology</div>
+            <div class="rc-sub-item">Historical Fiction Novels</div>
 
             <hr class="rc-divider">
 
@@ -660,16 +668,8 @@
 
             <hr class="rc-divider">
 
-            <div class="rc-section-label">Photos</div>
             <img class="rc-photo" src="monica.png" alt="Monica Adams">
             <div class="rc-signoff">Sincerely, Monica</div>
-
-            <hr class="rc-divider">
-
-            <div class="rc-section-label">Suggested</div>
-            <div class="rc-check">[ ] Connect on LinkedIn</div>
-            <div class="rc-check">[ ] Read 100 Chats</div>
-            <div class="rc-check">[ ] Follow on Substack</div>
 
             <hr class="rc-divider">
 
@@ -680,7 +680,7 @@
                 <div class="rc-barcode-num">2 04823 19104 7</div>
             </div>
             <div class="rc-footer" style="margin-top:6px;">&lt;&lt; Keep This Receipt &gt;&gt;</div>
-            <div class="rc-footer-sub">monicaadams7.github.io</div>
+        </div>
         </div>
     </div>
 
