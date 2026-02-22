@@ -110,10 +110,12 @@
             opacity: 0;
             transform: translateX(-6px);
             transition: opacity .3s ease .25s, transform .3s ease .25s;
+            pointer-events: none;
         }
 
         .pill.expanded .pill-actions {
             opacity: 1; transform: translateX(0);
+            pointer-events: auto;
         }
 
         .pill-btn {
