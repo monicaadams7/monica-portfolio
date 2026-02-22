@@ -14,14 +14,16 @@
         .back svg { width: 14px; height: 14px; }
         h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; }
         .subtitle { font-size: .85rem; color: #888; margin-bottom: 28px; line-height: 1.6; }
-        .collage { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
-        .collage-placeholder {
-            aspect-ratio: 1;
-            background: #e0e0de;
-            border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: .7rem; color: #aaa; letter-spacing: 1px; text-transform: uppercase;
+        .collage { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .collage-wide { grid-column: 1 / -1; }
+        .collage img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+            display: block;
         }
+        .collage-wide img { max-height: 340px; }
+        .collage-tall img { aspect-ratio: 3/4; }
     </style>
 </head>
 <body>
@@ -30,12 +32,9 @@
         <h1>Outdoor Enthusiast</h1>
         <div class="subtitle">Trail running, cycling, and everything outside.</div>
         <div class="collage">
-            <div class="collage-placeholder">Photo 1</div>
-            <div class="collage-placeholder">Photo 2</div>
-            <div class="collage-placeholder">Photo 3</div>
-            <div class="collage-placeholder">Photo 4</div>
-            <div class="collage-placeholder">Photo 5</div>
-            <div class="collage-placeholder">Photo 6</div>
+            <div class="collage-wide"><img src="outdoor1.jpg" alt="Alpine hiking in the mountains"></div>
+            <div class="collage-tall"><img src="outdoor2.jpg" alt="Summit in the snow"></div>
+            <div class="collage-tall"><img src="outdoor3.jpg" alt="Standing on the rocks, Alabama Hills"></div>
         </div>
     </div>
 </body>
