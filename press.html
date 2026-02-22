@@ -7,23 +7,78 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #f5f5f3; color: #1a1a1a; min-height: 100vh; -webkit-font-smoothing: antialiased; }
-        .page { max-width: 600px; margin: 0 auto; padding: 60px 24px; }
+        body { font-family: 'Inter', sans-serif; background: #EAF3F8; color: #1a1a1a; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+        .page { max-width: 600px; margin: 0 auto; padding: 60px 24px 80px; }
         .back { display: inline-flex; align-items: center; gap: 6px; font-size: .75rem; font-weight: 500; color: #999; text-decoration: none; letter-spacing: .3px; margin-bottom: 32px; transition: color .2s; }
         .back:hover { color: #333; }
         .back svg { width: 14px; height: 14px; }
         h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; }
-        .subtitle { font-size: .85rem; color: #888; margin-bottom: 28px; line-height: 1.6; }
-        p { font-size: .95rem; line-height: 1.75; color: #444; margin-bottom: 16px; }
-        a { color: #1a1a1a; text-underline-offset: 3px; }
+        .subtitle { font-size: .85rem; color: #888; margin-bottom: 36px; line-height: 1.6; }
+
+        .press-card {
+            background: white;
+            border-radius: 14px;
+            padding: 28px 28px 24px;
+            box-shadow: 0 2px 16px rgba(0,0,0,.07);
+        }
+        .press-outlet {
+            font-size: .65rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+            color: #999; margin-bottom: 10px;
+        }
+        .press-headline {
+            font-size: 1.15rem; font-weight: 700; line-height: 1.4;
+            color: #1a1a1a; margin-bottom: 12px;
+        }
+        .press-date {
+            font-size: .72rem; color: #bbb; margin-bottom: 18px;
+        }
+        .press-body {
+            font-size: .9rem; line-height: 1.75; color: #555;
+            margin-bottom: 20px;
+        }
+        .press-body p { margin-bottom: 12px; }
+        .press-body p:last-child { margin-bottom: 0; }
+        blockquote {
+            border-left: 3px solid #D0E8F5;
+            padding: 10px 16px;
+            margin: 16px 0;
+            font-style: italic;
+            color: #444;
+            font-size: .9rem;
+            line-height: 1.7;
+            background: #f7fbfe;
+            border-radius: 0 8px 8px 0;
+        }
+        .press-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: .78rem; font-weight: 600; color: #1a1a1a;
+            text-decoration: none; border-bottom: 1.5px solid #1a1a1a;
+            padding-bottom: 1px; transition: opacity .2s;
+        }
+        .press-link:hover { opacity: .6; }
+        .press-link svg { width: 12px; height: 12px; }
     </style>
 </head>
 <body>
     <div class="page">
         <a class="back" href="experience.html"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg> Back</a>
-        <h1>Featured in Business Insider</h1>
-        <div class="subtitle">Press coverage and media mentions.</div>
-        <p>Article link and details coming soon.</p>
+        <h1>Press</h1>
+        <div class="subtitle">Media coverage and features.</div>
+
+        <div class="press-card">
+            <div class="press-outlet">Business Insider</div>
+            <div class="press-headline">I'm a UCLA student. Here's how I get the most out of OpenAI's new Atlas browser.</div>
+            <div class="press-date">October 24, 2025</div>
+            <div class="press-body">
+                <p>Got early access to ChatGPT Atlas — OpenAI's AI-native browser that merges ChatGPT with a web browser and its Agents system — and wrote about how I actually use it as a student.</p>
+                <blockquote>"My favorite feature is being able to open lectures directly in Canvas and use the Ask ChatGPT button without having to download large PDFs. It gives ChatGPT full context about what my professor is teaching. It feels like having a personal tutor."</blockquote>
+                <p>I use Atlas to quiz myself on unlabeled diagrams for my physiological science class — opening lab images and asking ChatGPT to test me on cranial and spinal nerve diagrams in real time.</p>
+            </div>
+            <a class="press-link" href="https://www.businessinsider.com/ucla-student-use-openai-atlas-browser-2025-10" target="_blank" rel="noopener">
+                Read on Business Insider
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+            </a>
+        </div>
     </div>
 </body>
 </html>

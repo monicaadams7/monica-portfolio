@@ -219,35 +219,47 @@
         /* ===== RECEIPT ===== */
         .receipt {
             width: 380px; max-width: 90vw;
-            background: #faf8f4;
+            background: #fdf9f3;
             padding: 40px 32px 48px;
             position: relative;
-            box-shadow: 0 8px 40px rgba(0,0,0,.2);
+            box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 6px 24px rgba(0,0,0,.13), 0 22px 52px rgba(0,0,0,.1);
             font-family: 'Courier New', Courier, monospace;
             color: #1a1a1a;
             transform: translateY(30px) scale(.95);
             opacity: 0;
             transition: transform .5s cubic-bezier(.22,1,.36,1), opacity .4s ease;
             overflow: hidden;
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(0,0,0,.018) 23px, rgba(0,0,0,.018) 24px);
         }
 
         .receipt::before, .receipt::after {
             content: '';
             position: absolute; left: 0; right: 0;
             height: 12px;
-            background: linear-gradient(135deg, #faf8f4 33.33%, transparent 33.33%,
-                transparent 66.66%, #faf8f4 66.66%),
-                linear-gradient(225deg, #faf8f4 33.33%, transparent 33.33%,
-                transparent 66.66%, #faf8f4 66.66%);
+            background: linear-gradient(135deg, #fdf9f3 33.33%, transparent 33.33%,
+                transparent 66.66%, #fdf9f3 66.66%),
+                linear-gradient(225deg, #fdf9f3 33.33%, transparent 33.33%,
+                transparent 66.66%, #fdf9f3 66.66%);
             background-size: 16px 12px;
         }
         .receipt::before { top: -6px; }
         .receipt::after { bottom: -6px; transform: rotate(180deg); }
 
         .about-overlay.visible .receipt {
-            transform: translateY(0) scale(1);
+            transform: translateY(0) scale(1) rotate(0.5deg);
             opacity: 1;
         }
+
+        .rc-meta { display: flex; justify-content: space-between; font-size: .56rem; color: #bbb; letter-spacing: .3px; margin-bottom: 1px; }
+        .rc-cashier { font-size: .56rem; color: #bbb; letter-spacing: .3px; margin-bottom: 6px; }
+        .rc-pay-row { display: flex; justify-content: space-between; font-size: .62rem; letter-spacing: .5px; line-height: 2; text-transform: uppercase; }
+        .rc-pay-label { color: #999; }
+        .rc-pay-val { font-weight: 700; }
+        .rc-stamp-wrap { text-align: center; margin: 6px 0 2px; }
+        .rc-stamp { display: inline-block; font-size: .65rem; font-weight: 700; letter-spacing: 3px; color: #1a1a1a; border: 1.5px solid #1a1a1a; padding: 3px 14px; }
+        .rc-barcode-wrap { text-align: center; margin: 10px 0 4px; }
+        .rc-barcode { width: 170px; height: 44px; display: block; margin: 0 auto; }
+        .rc-barcode-num { font-size: .48rem; letter-spacing: 3px; color: #ccc; margin-top: 4px; }
 
         .rc-logo {
             text-align: center;
@@ -616,6 +628,8 @@
             <button class="rc-create" id="createBtn">Create your own</button>
             <div class="rc-logo">MONICA</div>
             <div class="rc-subtitle">About Me &bull; Mill Valley, CA</div>
+            <div class="rc-meta"><span>NO.&nbsp;MA-260222-7</span><span>02/22/2026&nbsp;&nbsp;11:42 AM</span></div>
+            <div class="rc-cashier">CASHIER: LIFE &nbsp;&bull;&nbsp; TABLE: UCLA</div>
 
             <hr class="rc-divider">
 
@@ -655,6 +669,20 @@
             <hr class="rc-divider">
 
             <div class="rc-footer">Thank you for reading &bull; Come again</div>
+
+            <hr class="rc-divider">
+            <div class="rc-pay-row"><span class="rc-pay-label">Payment</span><span class="rc-pay-val">VISA ****2027</span></div>
+            <div class="rc-pay-row"><span class="rc-pay-label">Auth Code</span><span class="rc-pay-val">742-891</span></div>
+            <div class="rc-stamp-wrap"><span class="rc-stamp">APPROVED</span></div>
+            <hr class="rc-divider">
+
+            <div class="rc-barcode-wrap">
+                <svg class="rc-barcode" viewBox="0 0 200 44" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                    <rect x="0" width="2" height="44" fill="#1a1a1a"/><rect x="4" width="1" height="44" fill="#1a1a1a"/><rect x="7" width="3" height="44" fill="#1a1a1a"/><rect x="12" width="1" height="44" fill="#1a1a1a"/><rect x="15" width="2" height="44" fill="#1a1a1a"/><rect x="19" width="1" height="44" fill="#1a1a1a"/><rect x="22" width="3" height="44" fill="#1a1a1a"/><rect x="27" width="1" height="44" fill="#1a1a1a"/><rect x="30" width="2" height="44" fill="#1a1a1a"/><rect x="34" width="1" height="44" fill="#1a1a1a"/><rect x="37" width="3" height="44" fill="#1a1a1a"/><rect x="42" width="2" height="44" fill="#1a1a1a"/><rect x="46" width="1" height="44" fill="#1a1a1a"/><rect x="49" width="2" height="44" fill="#1a1a1a"/><rect x="53" width="3" height="44" fill="#1a1a1a"/><rect x="58" width="1" height="44" fill="#1a1a1a"/><rect x="61" width="2" height="44" fill="#1a1a1a"/><rect x="65" width="1" height="44" fill="#1a1a1a"/><rect x="68" width="3" height="44" fill="#1a1a1a"/><rect x="73" width="2" height="44" fill="#1a1a1a"/><rect x="77" width="1" height="44" fill="#1a1a1a"/><rect x="80" width="2" height="44" fill="#1a1a1a"/><rect x="84" width="3" height="44" fill="#1a1a1a"/><rect x="89" width="1" height="44" fill="#1a1a1a"/><rect x="92" width="2" height="44" fill="#1a1a1a"/><rect x="96" width="1" height="44" fill="#1a1a1a"/><rect x="99" width="3" height="44" fill="#1a1a1a"/><rect x="104" width="2" height="44" fill="#1a1a1a"/><rect x="108" width="1" height="44" fill="#1a1a1a"/><rect x="111" width="2" height="44" fill="#1a1a1a"/><rect x="115" width="3" height="44" fill="#1a1a1a"/><rect x="120" width="1" height="44" fill="#1a1a1a"/><rect x="123" width="2" height="44" fill="#1a1a1a"/><rect x="127" width="1" height="44" fill="#1a1a1a"/><rect x="130" width="3" height="44" fill="#1a1a1a"/><rect x="135" width="2" height="44" fill="#1a1a1a"/><rect x="139" width="1" height="44" fill="#1a1a1a"/><rect x="142" width="2" height="44" fill="#1a1a1a"/><rect x="146" width="1" height="44" fill="#1a1a1a"/><rect x="149" width="3" height="44" fill="#1a1a1a"/><rect x="154" width="2" height="44" fill="#1a1a1a"/><rect x="158" width="1" height="44" fill="#1a1a1a"/><rect x="161" width="2" height="44" fill="#1a1a1a"/><rect x="165" width="3" height="44" fill="#1a1a1a"/><rect x="170" width="1" height="44" fill="#1a1a1a"/><rect x="173" width="2" height="44" fill="#1a1a1a"/><rect x="177" width="1" height="44" fill="#1a1a1a"/><rect x="180" width="3" height="44" fill="#1a1a1a"/><rect x="185" width="2" height="44" fill="#1a1a1a"/><rect x="189" width="1" height="44" fill="#1a1a1a"/><rect x="192" width="2" height="44" fill="#1a1a1a"/><rect x="196" width="2" height="44" fill="#1a1a1a"/>
+                </svg>
+                <div class="rc-barcode-num">2 04823 19104 7</div>
+            </div>
+            <div class="rc-footer" style="margin-top:6px;">&#x2605; CUSTOMER COPY &#x2605;</div>
         </div>
     </div>
 
