@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -384,6 +385,101 @@
             .exp-card { padding: 36px 28px 32px; }
             .link-chip { padding: 10px 14px; font-size: .72rem; }
         }
+
+        /* ===== CREATE OVERLAY ===== */
+        .create-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,.65);
+            z-index: 160;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity .4s ease;
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            padding: 24px;
+            overflow-y: auto;
+        }
+        .create-overlay.visible { opacity: 1; pointer-events: auto; }
+
+        .create-inner {
+            display: flex; gap: 24px; align-items: flex-start; margin: auto;
+        }
+
+        .create-form-panel {
+            background: #1a1a1a; border-radius: 20px; padding: 24px;
+            width: 280px; flex-shrink: 0;
+            display: flex; flex-direction: column; gap: 14px;
+        }
+
+        .create-form-header {
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .create-form-title {
+            font-size: .7rem; font-weight: 700; color: #fff;
+            letter-spacing: 2px; text-transform: uppercase;
+        }
+        .create-close-btn {
+            width: 26px; height: 26px; border-radius: 50%;
+            background: #2a2a2a; border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background .2s;
+        }
+        .create-close-btn:hover { background: #3a3a3a; }
+        .create-close-btn svg { width: 11px; height: 11px; color: #999; }
+
+        .cf-fields { display: flex; flex-direction: column; gap: 10px; }
+        .cf-group { display: flex; flex-direction: column; gap: 4px; }
+        .cf-label {
+            font-size: .58rem; font-weight: 600; color: #555;
+            letter-spacing: 1px; text-transform: uppercase;
+        }
+        .cf-hint { font-weight: 400; color: #3a3a3a; letter-spacing: 0; text-transform: none; margin-left: 4px; }
+
+        .cf-input {
+            background: #222; border: 1px solid #2a2a2a; border-radius: 8px;
+            padding: 8px 10px; color: #e0e0e0;
+            font-family: 'Inter', sans-serif; font-size: .75rem;
+            outline: none; transition: border-color .2s, background .2s;
+            width: 100%; resize: none;
+        }
+        .cf-input::placeholder { color: #3a3a3a; }
+        .cf-input:focus { border-color: #444; background: #252525; }
+        .cf-textarea { height: 64px; line-height: 1.6; }
+
+        .cf-photo-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 12px; background: #222; border: 1px solid #2a2a2a;
+            border-radius: 8px; color: #555; font-size: .72rem; font-weight: 500;
+            cursor: pointer; transition: background .2s, color .2s, border-color .2s;
+        }
+        .cf-photo-btn:hover { background: #252525; border-color: #444; color: #aaa; }
+        .cf-photo-btn.has-photo { color: #6fcf97; border-color: #3a5a42; }
+        .cf-photo-btn svg { width: 13px; height: 13px; }
+
+        .create-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+        .ca-btn {
+            display: flex; align-items: center; gap: 5px;
+            padding: 9px 14px; border-radius: 50px; border: none;
+            cursor: pointer; font-family: 'Inter', sans-serif;
+            font-size: .68rem; font-weight: 600;
+            transition: transform .15s, filter .2s;
+            flex: 1; justify-content: center; white-space: nowrap;
+        }
+        .ca-btn:hover { filter: brightness(1.12); }
+        .ca-btn:active { transform: scale(.95); }
+        .ca-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+        .ca-download { background: #fff; color: #1a1a1a; }
+        .ca-x { background: #000; color: #fff; }
+        .ca-li { background: #0a66c2; color: #fff; }
+
+        .create-preview-panel .receipt {
+            transform: none !important; opacity: 1 !important;
+            transition: none !important; box-shadow: 0 12px 48px rgba(0,0,0,.35);
+        }
+
+        @media (max-width: 720px) {
+            .create-inner { flex-direction: column; align-items: center; }
+            .create-form-panel { width: min(320px, 100%); }
+        }
     </style>
 </head>
 <body>
@@ -472,6 +568,94 @@
             <div class="rc-footer">Thank you for reading &bull; Come again</div>
         </div>
     </div>
+
+<div class="create-overlay" id="createOverlay">
+    <div class="create-inner">
+        <div class="create-form-panel">
+            <div class="create-form-header">
+                <span class="create-form-title">Cool Receipt</span>
+                <button class="create-close-btn" id="createClose">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="cf-fields">
+                <div class="cf-group">
+                    <label class="cf-label" for="f-name">Name</label>
+                    <input class="cf-input" id="f-name" type="text" placeholder="Your name" autocomplete="off">
+                </div>
+                <div class="cf-group">
+                    <label class="cf-label" for="f-location">Location</label>
+                    <input class="cf-input" id="f-location" type="text" placeholder="City, State" autocomplete="off">
+                </div>
+                <div class="cf-group">
+                    <label class="cf-label" for="f-school">School</label>
+                    <input class="cf-input" id="f-school" type="text" placeholder="University" autocomplete="off">
+                </div>
+                <div class="cf-group">
+                    <label class="cf-label" for="f-status">Status</label>
+                    <input class="cf-input" id="f-status" type="text" placeholder="What are you up to?" autocomplete="off">
+                </div>
+                <div class="cf-group">
+                    <label class="cf-label" for="f-exp">Experience <span class="cf-hint">one per line</span></label>
+                    <textarea class="cf-input cf-textarea" id="f-exp" placeholder="Role or project&#10;Another experience"></textarea>
+                </div>
+                <div class="cf-group">
+                    <label class="cf-label" for="f-int">Interests <span class="cf-hint">one per line</span></label>
+                    <textarea class="cf-input cf-textarea" id="f-int" placeholder="Hobby or passion&#10;Something you love"></textarea>
+                </div>
+                <div class="cf-group">
+                    <label class="cf-label">Photo</label>
+                    <label class="cf-photo-btn" id="photoLabel">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"/></svg>
+                        <span id="photoLabelText">Upload photo</span>
+                        <input type="file" id="f-photo" accept="image/*" style="display:none">
+                    </label>
+                </div>
+            </div>
+            <div class="create-actions">
+                <button class="ca-btn ca-download" id="dlBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+                    Save
+                </button>
+                <button class="ca-btn ca-x" id="shareXBtn">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.262 5.633 5.902-5.633Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    Share
+                </button>
+                <button class="ca-btn ca-li" id="shareLIBtn">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    Share
+                </button>
+            </div>
+        </div>
+        <div class="create-preview-panel">
+            <div class="receipt" id="pvReceipt">
+                <div class="rc-logo" id="pv-name">YOUR NAME</div>
+                <div class="rc-subtitle" id="pv-subtitle">About Me</div>
+                <hr class="rc-divider">
+                <div class="rc-row"><span class="rc-label">Location</span><span class="rc-value" id="pv-location">—</span></div>
+                <div class="rc-row"><span class="rc-label">School</span><span class="rc-value" id="pv-school">—</span></div>
+                <div class="rc-row"><span class="rc-label">Status</span><span class="rc-value" id="pv-status">—</span></div>
+                <hr class="rc-divider">
+                <div class="rc-section-title">Experience</div>
+                <div id="pv-exp"><div class="rc-item">Your experience here</div></div>
+                <hr class="rc-divider">
+                <div class="rc-section-title">Interests</div>
+                <div id="pv-int"><div class="rc-item">Your interests here</div></div>
+                <hr class="rc-divider">
+                <div class="rc-total">
+                    <span class="rc-total-label">Total Passions</span>
+                    <span class="rc-total-value">&infin;</span>
+                </div>
+                <div class="rc-note">(enthusiasm tax incl.)</div>
+                <hr class="rc-divider">
+                <img class="rc-photo" id="pv-photo" src="monica.png" alt="">
+                <div class="rc-signoff" id="pv-signoff">Sincerely, You</div>
+                <hr class="rc-divider">
+                <div class="rc-footer">Thank you for reading &bull; Come again</div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
 (function() {
@@ -571,9 +755,93 @@
         history.replaceState(null, '', '#links');
     });
 
+    // ===== CREATE YOUR OWN =====
+    var createOverlay = document.getElementById('createOverlay');
+
+    document.getElementById('createBtn').addEventListener('click', function() {
+        aboutOverlay.classList.remove('visible');
+        createOverlay.classList.add('visible');
+    });
+
+    document.getElementById('createClose').addEventListener('click', function() {
+        createOverlay.classList.remove('visible');
+    });
+
+    createOverlay.addEventListener('click', function(e) {
+        if (e.target === createOverlay) createOverlay.classList.remove('visible');
+    });
+
+    function updatePreview() {
+        var name = document.getElementById('f-name').value.trim();
+        var loc  = document.getElementById('f-location').value.trim();
+        var school = document.getElementById('f-school').value.trim();
+        var status = document.getElementById('f-status').value.trim();
+        var expText = document.getElementById('f-exp').value;
+        var intText = document.getElementById('f-int').value;
+
+        document.getElementById('pv-name').textContent = (name || 'YOUR NAME').toUpperCase();
+        document.getElementById('pv-subtitle').textContent = 'About Me' + (loc ? ' \u2022 ' + loc : '');
+        document.getElementById('pv-location').textContent = loc || '\u2014';
+        document.getElementById('pv-school').textContent = school || '\u2014';
+        document.getElementById('pv-status').textContent = status || '\u2014';
+        document.getElementById('pv-signoff').textContent = 'Sincerely, ' + (name || 'You');
+
+        function makeItems(text, fallback) {
+            var lines = text.split('\n').map(function(l) { return l.trim(); }).filter(Boolean);
+            return (lines.length ? lines : [fallback]).map(function(l) {
+                return '<div class="rc-item">' + l.replace(/&/g,'&amp;').replace(/</g,'&lt;') + '</div>';
+            }).join('');
+        }
+        document.getElementById('pv-exp').innerHTML = makeItems(expText, 'Your experience here');
+        document.getElementById('pv-int').innerHTML = makeItems(intText, 'Your interests here');
+    }
+
+    ['f-name','f-location','f-school','f-status','f-exp','f-int'].forEach(function(id) {
+        document.getElementById(id).addEventListener('input', updatePreview);
+    });
+
+    document.getElementById('f-photo').addEventListener('change', function() {
+        var file = this.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('pv-photo').src = e.target.result;
+            document.getElementById('photoLabel').classList.add('has-photo');
+            document.getElementById('photoLabelText').textContent = 'Photo added \u2713';
+        };
+        reader.readAsDataURL(file);
+    });
+
+    document.getElementById('dlBtn').addEventListener('click', function() {
+        html2canvas(document.getElementById('pvReceipt'), {
+            scale: 2, useCORS: true, backgroundColor: '#faf8f4'
+        }).then(function(canvas) {
+            var a = document.createElement('a');
+            a.download = 'cool-receipt.png';
+            a.href = canvas.toDataURL('image/png');
+            a.click();
+        });
+    });
+
+    document.getElementById('shareXBtn').addEventListener('click', function() {
+        var name = document.getElementById('f-name').value.trim();
+        var text = encodeURIComponent((name ? name + "'s" : 'My') + ' Cool Receipt \uD83E\uDDFE');
+        var url  = encodeURIComponent('https://monicaadams7.github.io/monica-portfolio/');
+        window.open('https://twitter.com/intent/tweet?text=' + text + '&url=' + url, '_blank');
+    });
+
+    document.getElementById('shareLIBtn').addEventListener('click', function() {
+        var url = encodeURIComponent('https://monicaadams7.github.io/monica-portfolio/');
+        window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + url, '_blank');
+    });
+
+    // ===== END CREATE =====
+
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
-            if (aboutOverlay.classList.contains('visible')) {
+            if (createOverlay.classList.contains('visible')) {
+                createOverlay.classList.remove('visible');
+            } else if (aboutOverlay.classList.contains('visible')) {
                 aboutOverlay.classList.remove('visible');
             } else if (showingLinks) {
                 linksPanel.classList.remove('visible'); showingLinks = false;
