@@ -147,6 +147,7 @@
             overflow-y: hidden;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
+            cursor: grab;
         }
         .links-panel::-webkit-scrollbar { display: none; }
 
@@ -545,6 +546,23 @@
 
     aboutOverlay.addEventListener('click', function(e) {
         if (e.target === aboutOverlay) aboutOverlay.classList.remove('visible');
+    });
+
+    var lp = linksPanel;
+    var lpDown = false, lpStartX, lpScrollLeft;
+    lp.addEventListener('mousedown', function(e) {
+        lpDown = true;
+        lp.style.cursor = 'grabbing';
+        lpStartX = e.pageX - lp.offsetLeft;
+        lpScrollLeft = lp.scrollLeft;
+    });
+    lp.addEventListener('mouseleave', function() { lpDown = false; lp.style.cursor = ''; });
+    lp.addEventListener('mouseup', function() { lpDown = false; lp.style.cursor = ''; });
+    lp.addEventListener('mousemove', function(e) {
+        if (!lpDown) return;
+        e.preventDefault();
+        var x = e.pageX - lp.offsetLeft;
+        lp.scrollLeft = lpScrollLeft - (x - lpStartX) * 1.5;
     });
 
     document.getElementById('expLink').addEventListener('click', function() {
