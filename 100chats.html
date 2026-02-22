@@ -35,6 +35,11 @@
         }
         .card-body p { margin-bottom: 12px; }
         .card-body p:last-child { margin-bottom: 0; }
+        .card-body ul { list-style: none; margin: 12px 0; display: flex; flex-direction: column; gap: 6px; }
+        .card-body ul li { font-size: .9rem; line-height: 1.6; color: #555; padding-left: 16px; position: relative; }
+        .card-body ul li::before { content: ''; position: absolute; left: 0; top: 9px; width: 5px; height: 5px; border-radius: 50%; background: #ccc; }
+        .card-body a { color: #1a1a1a; text-underline-offset: 3px; text-decoration: underline; text-decoration-color: rgba(0,0,0,.25); transition: text-decoration-color .2s; }
+        .card-body a:hover { text-decoration-color: #1a1a1a; }
         blockquote {
             border-left: 3px solid #D0E8F5;
             padding: 10px 16px;
@@ -75,6 +80,9 @@
             <div class="card-title">100 Chats for Studying, Career &amp; College Life</div>
             <div class="card-body">
                 <p>OpenAI brought together 70 college students from across the U.S. and Canada to share their most useful ChatGPT conversations, meeting weekly to show their best chats and surface what actually works. I was part of that contributor group.</p>
+                <ul>
+                    <li>Worked with product and marketing teams at OpenAI building <a href="https://chatgpt.com/atlas" target="_blank" rel="noopener">Atlas</a>, <a href="https://chatgpt.com/studymode" target="_blank" rel="noopener">Study and Learn</a>, and more tools</li>
+                </ul>
                 <p>Over months of testing, the top 100 prompts were compiled into a printed book and distributed on campuses nationwide.</p>
                 <p>The book was a limited-edition print run handed out at 50+ colleges. The full collection lives at chatgpt.com.</p>
             </div>
