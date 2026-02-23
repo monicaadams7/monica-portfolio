@@ -41,6 +41,27 @@
         .exp-list a:hover {
             text-decoration-color: #1a1a1a;
         }
+
+        /* flip items */
+        .exp-flip { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        .exp-flip-inner {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform .42s cubic-bezier(.4,0,.2,1), height .42s cubic-bezier(.4,0,.2,1);
+        }
+        .exp-flip.flipped .exp-flip-inner { transform: rotateY(180deg); }
+        .exp-flip-front, .exp-flip-back {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .exp-flip-back {
+            position: absolute;
+            top: 0; left: 0; width: 100%;
+            transform: rotateY(180deg);
+            font-size: .85rem;
+            color: #888;
+            font-weight: 400;
+        }
     </style>
 </head>
 <body>
@@ -49,16 +70,39 @@
         <h1>Notes &amp; Experience</h1>
 
         <ul class="exp-list">
-            <li><a href="scgc.html">Analyst at SCGC</a>, Feb 2026 - Present</li>
+            <li class="exp-flip">
+                <div class="exp-flip-inner">
+                    <div class="exp-flip-front"><a href="scgc.html">Analyst at SCGC</a></div>
+                    <div class="exp-flip-back">Feb 2026 - Present</div>
+                </div>
+            </li>
             <li><a href="press.html">Featured in Business Insider</a></li>
             <li><a href="100chats.html">Co-created <em>100 Chats</em></a>, a book with OpenAI &amp; ChatGPT Lab.</li>
             <li><a href="atlas.html">Member of ChatGPT Lab at OpenAI</a>, product, marketing, communications &amp; education teams.</li>
             <li><a href="nathanson.html">Research in Nathanson Lab at UCLA</a></li>
-            <li><a href="minimis.html">Intern at Minimis</a>, Summer 2025.</li>
+            <li class="exp-flip">
+                <div class="exp-flip-inner">
+                    <div class="exp-flip-front"><a href="minimis.html">Intern at Minimis</a></div>
+                    <div class="exp-flip-back">Summer 2025</div>
+                </div>
+            </li>
             <li><a href="outdoors.html">Photo gallery</a></li>
             <li><a href="books.html">Favorite books</a></li>
             <li><a href="classes.html">Physiology major, UCLA '27</a></li>
         </ul>
     </div>
+    <script>
+        document.querySelectorAll('.exp-flip').forEach(function(card) {
+            var inner = card.querySelector('.exp-flip-inner');
+            var front = card.querySelector('.exp-flip-front');
+            var back  = card.querySelector('.exp-flip-back');
+            inner.style.height = front.offsetHeight + 'px';
+            card.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') return;
+                var flipped = card.classList.toggle('flipped');
+                inner.style.height = (flipped ? back.scrollHeight : front.offsetHeight) + 'px';
+            });
+        });
+    </script>
 </body>
 </html>
