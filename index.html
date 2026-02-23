@@ -137,44 +137,63 @@
         .pill-btn.blue { background: #998CEB; }
         .pill-btn svg { width: 18px; height: 18px; color: #fff; }
 
-        /* ===== LINKS BAR ===== */
-        .links-panel {
+        /* ===== DOCK ===== */
+        .dock-wrap {
             position: fixed;
             left: 50%; top: 50%;
-            transform: translate(-50%, -50%) scale(.85);
-            background: #1a1a1a;
-            border-radius: 60px;
-            padding: 8px;
-            display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
-            justify-content: center;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            gap: 10px;
             opacity: 0;
             pointer-events: none;
-            transition: opacity .35s ease, transform .35s cubic-bezier(.32,.72,0,1);
-            max-width: calc(100vw - 32px);
+            transition: opacity .3s ease;
+            z-index: 10;
+        }
+        .dock-wrap.visible { opacity: 1; pointer-events: auto; }
+
+        .dock {
+            background: #1a1a1a;
+            border-radius: 60px;
+            padding: 6px;
+            display: flex;
+            gap: 3px;
+            align-items: center;
         }
 
-        .links-panel.visible {
-            opacity: 1; pointer-events: auto;
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        .link-chip {
-            display: flex; align-items: center; gap: 7px;
-            padding: 10px 15px;
-            border-radius: 30px;
-            background: #2a2a2a;
+        .dock-btn {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
             color: #bbb;
             text-decoration: none;
-            font-size: .78rem; font-weight: 500;
-            letter-spacing: .2px;
-            transition: background .2s, color .2s, transform .15s;
-            white-space: nowrap;
-            cursor: pointer;
+            transition: background .15s, color .15s, transform .15s;
             flex-shrink: 0;
         }
+        .dock-btn:hover { background: #2d2d2d; color: #fff; transform: scale(1.1); }
+        .dock-btn:active { transform: scale(.94); }
+        .dock-btn svg { width: 16px; height: 16px; }
 
-        .link-chip:hover { background: #3a3a3a; color: #fff; }
-        .link-chip svg { width: 15px; height: 15px; flex-shrink: 0; }
+        .dock-divider { width: 1px; height: 18px; background: #333; margin: 0 3px; flex-shrink: 0; }
+
+        .dock-label {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 7px 14px;
+            border-radius: 30px;
+            font-size: .75rem;
+            font-weight: 500;
+            letter-spacing: .2px;
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateX(-6px);
+            transition: opacity .18s, transform .18s;
+            pointer-events: none;
+        }
+        .dock-label.show { opacity: 1; transform: translateX(0); }
 
         /* ===== ABOUT ME OVERLAY ===== */
         .about-overlay {
@@ -388,7 +407,7 @@
             .pill.expanded { width: 320px; }
             .receipt { padding: 32px 24px 40px; width: 340px; }
             .exp-card { padding: 36px 28px 32px; }
-            .link-chip { padding: 10px 14px; font-size: .72rem; }
+            .dock-btn { width: 32px; height: 32px; }
         }
 
         /* ===== CRUMPLE ANIMATION ===== */
@@ -591,19 +610,23 @@
         </div>
     </div>
 
-    <div class="links-panel" id="linksPanel">
-        <a class="link-chip" href="https://www.linkedin.com/in/monicakadams/" target="_blank" rel="noopener">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg>
-            LinkedIn
-        </a>
-        <a class="link-chip" href="experience.html" id="expLink">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z"/></svg>
-            Experience
-        </a>
-        <a class="link-chip" href="https://substack.com/@monicakadams" target="_blank" rel="noopener">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"/></svg>
-            Substack
-        </a>
+    <div class="dock-wrap" id="dockWrap">
+        <div class="dock">
+            <button class="dock-btn" id="dockBack" aria-label="Back" data-label="Back">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
+            </button>
+            <div class="dock-divider"></div>
+            <a class="dock-btn" href="https://www.linkedin.com/in/monicakadams/" target="_blank" rel="noopener" data-label="LinkedIn">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg>
+            </a>
+            <a class="dock-btn" href="experience.html" id="expLink" data-label="Experience">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z"/></svg>
+            </a>
+            <a class="dock-btn" href="https://substack.com/@monicakadams" target="_blank" rel="noopener" data-label="Substack">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"/></svg>
+            </a>
+        </div>
+        <span class="dock-label" id="dockLabel"></span>
     </div>
 
     <div class="about-overlay" id="aboutOverlay">
@@ -769,12 +792,13 @@
     var avatar = document.getElementById('avatar');
     var bioBtn = document.getElementById('bioBtn');
     var linksBtn = document.getElementById('linksBtn');
-    var linksPanel = document.getElementById('linksPanel');
+    var dockWrap = document.getElementById('dockWrap');
+    var dockLabel = document.getElementById('dockLabel');
     var aboutOverlay = document.getElementById('aboutOverlay');
     var aboutClose = document.getElementById('aboutClose');
 
     var v = 0;
-    var showingLinks = false;
+    var showingDock = false;
 
     if (window.location.hash === '#links') {
         loader.classList.add('done');
@@ -782,8 +806,8 @@
         setTimeout(function() {
             pill.classList.add('visible');
             pill.classList.add('hidden');
-            linksPanel.classList.add('visible');
-            showingLinks = true;
+            dockWrap.classList.add('visible');
+            showingDock = true;
         }, 50);
     } else {
         var tick = setInterval(function() {
@@ -820,17 +844,33 @@
     linksBtn.addEventListener('click', function(e) {
         e.stopPropagation();
         pill.classList.add('hidden');
-        setTimeout(function() { linksPanel.classList.add('visible'); showingLinks = true; }, 200);
+        setTimeout(function() { dockWrap.classList.add('visible'); showingDock = true; }, 200);
     });
 
-    function closeLinks() {
-        linksPanel.classList.remove('visible');
-        showingLinks = false;
+    function closeDock() {
+        dockWrap.classList.remove('visible');
+        dockLabel.classList.remove('show');
+        showingDock = false;
         setTimeout(function() { pill.classList.remove('hidden'); }, 200);
     }
 
+    document.getElementById('dockBack').addEventListener('click', function(e) {
+        e.stopPropagation();
+        closeDock();
+    });
+
     document.addEventListener('click', function(e) {
-        if (showingLinks && !linksPanel.contains(e.target)) closeLinks();
+        if (showingDock && !dockWrap.contains(e.target)) closeDock();
+    });
+
+    dockWrap.querySelectorAll('[data-label]').forEach(function(btn) {
+        btn.addEventListener('mouseenter', function() {
+            dockLabel.textContent = btn.dataset.label;
+            dockLabel.classList.add('show');
+        });
+        btn.addEventListener('mouseleave', function() {
+            dockLabel.classList.remove('show');
+        });
     });
 
     function closeAboutWithCrumple() {
@@ -964,8 +1004,8 @@
                 createOverlay.classList.remove('visible');
             } else if (aboutOverlay.classList.contains('visible')) {
                 closeAboutWithCrumple();
-            } else if (showingLinks) {
-                closeLinks();
+            } else if (showingDock) {
+                closeDock();
             } else if (pill.classList.contains('expanded')) {
                 pill.classList.remove('expanded');
             }
