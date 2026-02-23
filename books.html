@@ -517,11 +517,7 @@
         var why    = document.getElementById('rec-why').value.trim();
         var name   = document.getElementById('rec-name').value.trim();
 
-        /* ── Replace FORM_ID below with your Formspree form ID ──
-           1. Go to formspree.io and create a free account
-           2. Create a new form → get your form ID (looks like "xyzabcde")
-           3. Replace FORM_ID in the URL below                        */
-        fetch('https://formspree.io/f/FORM_ID', {
+        fetch('https://formspree.io/f/xqedgaqg', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify({ title: title, author: author, why: why, name: name })
