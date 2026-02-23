@@ -3,36 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coursework — Monica Adams</title>
+    <title>Classes — Monica Adams</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #f5f5f3; color: #1a1a1a; min-height: 100vh; -webkit-font-smoothing: antialiased; }
-        .page { max-width: 600px; margin: 0 auto; padding: 60px 24px; }
+        body { font-family: 'Inter', sans-serif; background: #EAF3F8; color: #1a1a1a; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+        .page { max-width: 600px; margin: 0 auto; padding: 60px 24px 80px; }
+
         .back { display: inline-flex; align-items: center; gap: 6px; font-size: .75rem; font-weight: 500; color: #999; text-decoration: none; letter-spacing: .3px; margin-bottom: 32px; transition: color .2s; }
         .back:hover { color: #333; }
         .back svg { width: 14px; height: 14px; }
+
         h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; }
-        .subtitle { font-size: .85rem; color: #888; margin-bottom: 28px; line-height: 1.6; }
-        .quarter { margin-bottom: 28px; }
-        .quarter-label { font-size: .65rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: #aaa; margin-bottom: 8px; }
-        .course-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-        .course-list li { font-size: .9rem; color: #444; line-height: 1.5; padding-left: 16px; position: relative; }
-        .course-list li::before { content: ''; position: absolute; left: 0; top: 9px; width: 5px; height: 5px; border-radius: 50%; background: #ddd; }
+        .subtitle { font-size: .85rem; color: #888; margin-bottom: 40px; line-height: 1.6; }
+
+        .class-list { display: flex; flex-direction: column; gap: 0; }
+
+        .class-item {
+            border-bottom: 1px solid #d4e5ef;
+            padding: 20px 0;
+        }
+        .class-item:first-child { border-top: 1px solid #d4e5ef; }
+
+        .class-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+
+        .class-name {
+            font-size: .95rem;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .class-code {
+            font-size: .7rem;
+            color: #bbb;
+            font-weight: 400;
+            letter-spacing: .3px;
+        }
+
+        .class-body {
+            font-size: .875rem;
+            line-height: 1.75;
+            color: #555;
+        }
+
+        .class-highlight {
+            display: inline;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .class-note {
+            display: block;
+            margin-top: 6px;
+            font-size: .78rem;
+            color: #999;
+            font-style: italic;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
     <div class="page">
-        <a class="back" href="experience.html"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg> Back</a>
+        <a class="back" href="experience.html">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
+            Back
+        </a>
         <h1>Physiology Major, UCLA '27</h1>
-        <div class="subtitle">Coursework and classes taken.</div>
-        <div class="quarter">
-            <div class="quarter-label">Quarter / Year</div>
-            <ul class="course-list">
-                <li>Course name here</li>
-                <li>Course name here</li>
-                <li>Course name here</li>
-            </ul>
+        <div class="subtitle">Some of my favorite classes I've taken at UCLA so far.</div>
+
+        <div class="class-list">
+
+            <div class="class-item">
+                <div class="class-header">
+                    <span class="class-name">Biomedical Ethics</span>
+                </div>
+                <p class="class-body">One of those classes that changes how you think. Worked through the hardest questions in medicine — consent, autonomy, end-of-life care, research ethics. The kind of class where you leave with more questions than answers, which means it did its job.</p>
+            </div>
+
+            <div class="class-item">
+                <div class="class-header">
+                    <span class="class-name">Principles of Oral Communication</span>
+                </div>
+                <p class="class-body">Learned the art of <span class="class-highlight">extemporaneous speech</span> — thinking on your feet, structuring an argument in real time, and delivering it with conviction. Won extra credit for best speeches. One of the most practically useful things I've learned at UCLA.</p>
+            </div>
+
+            <div class="class-item">
+                <div class="class-header">
+                    <span class="class-name">Economics 185</span>
+                    <span class="class-code">Professor Stephen Ross</span>
+                </div>
+                <p class="class-body">Professor Ross drove down from San Diego every single evening to teach this class. His lectures were some of the most heartfelt I've ever heard — investing, markets, life. He taught me one of the best lessons I've ever learned:</p>
+                <span class="class-note">"Lead with your heart. Tell people and show them."</span>
+            </div>
+
+            <div class="class-item">
+                <div class="class-header">
+                    <span class="class-name">Computer Science 97</span>
+                    <span class="class-code">Entrepreneurship</span>
+                </div>
+                <p class="class-body">Like a mini Y Combinator inside UCLA. Taught by <span class="class-highlight">Michael Blend</span> (founder of Systems1 and MapQuest) and <span class="class-highlight">Josh Jones</span> (founder of DreamHost and early Bitcoin investor) — genuinely extraordinary teachers. We built <a href="https://asksephira.com" target="_blank" rel="noopener" style="color:#1a1a1a;text-underline-offset:3px;">asksephira.com</a> and won the pitch competition.</p>
+            </div>
+
+            <div class="class-item">
+                <div class="class-header">
+                    <span class="class-name">PhysSci 107 — Systems Anatomy</span>
+                    <span class="class-code">The cadaver class</span>
+                </div>
+                <p class="class-body">The hallmark of the physiology major at UCLA. Spent real time working with cadavers — an experience that taught me more than almost any other class in my life. Incredibly hard: tested on every cranial nerve, every intricate structure of the human body. You come out of it with a completely different relationship to medicine.</p>
+            </div>
+
+            <div class="class-item">
+                <div class="class-header">
+                    <span class="class-name">Physics 5B — Thermodynamics & Waves</span>
+                </div>
+                <p class="class-body">One of the best professors I've had. Made physics feel like the explanation for everything: how heat systems work in houses, how noise-cancelling headphones work, the physics of blood vessels, why an ambulance sounds different as it passes. The world makes more sense after this class.</p>
+            </div>
+
         </div>
     </div>
 </body>
