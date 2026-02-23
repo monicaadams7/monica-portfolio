@@ -653,22 +653,23 @@
         <button class="rc-create" id="createBtn">Create your own</button>
         <div class="receipt">
             <div class="rc-logo">Monica Adams</div>
-            <div class="rc-logo-sub">&amp; Co. &nbsp;·&nbsp; Est. 2003</div>
+            <div class="rc-logo-sub">&amp; Co. &nbsp;·&nbsp; Est. 2005</div>
             <div class="rc-subtitle" style="margin-bottom:3px;">Mill Valley, California</div>
-            <div class="rc-meta"><span>No.&nbsp;MA-260222-7</span><span>02/22/2026&nbsp;&nbsp;11:42 AM</span></div>
+            <div class="rc-meta"><span>No.&nbsp;MA-260222-7</span><span id="rc-date-live"></span></div>
 
             <hr class="rc-divider">
 
             <div class="rc-count-row"><span>Experience</span></div>
-            <div class="rc-exp-row"><span>Analyst Intern, SCGC</span><span>Feb 2026–Now</span></div>
-            <div class="rc-exp-row"><span>ChatGPT Lab, OpenAI</span><span>Jan 2025–Now</span></div>
-            <div class="rc-exp-row"><span>Research Asst., Nathanson Lab</span><span>Nov 2025–Now</span></div>
+            <div class="rc-exp-row"><span>Analyst Intern, SCGC</span><span>Feb 2026–Present</span></div>
+            <div class="rc-exp-row"><span>ChatGPT Lab, OpenAI</span><span>Jan 2025–Present</span></div>
+            <div class="rc-exp-row"><span>Research Asst., Nathanson Lab</span><span>Nov 2025–Present</span></div>
             <div class="rc-exp-row"><span>Intern, Minimis</span><span>Summer 2025</span></div>
 
             <hr class="rc-divider">
 
             <div class="rc-count-row"><span>Interests</span></div>
             <div class="rc-sub-item">Trail Running</div>
+            <div class="rc-sub-item">Triathlons</div>
             <div class="rc-sub-item">Cycling</div>
             <div class="rc-sub-item">Competitive Tennis</div>
             <div class="rc-sub-item">Backpacking</div>
@@ -678,12 +679,6 @@
             <div class="rc-sub-item">Historical Fiction Novels</div>
 
             <hr class="rc-divider">
-
-            <div class="rc-total">
-                <span class="rc-total-label">Total Passions</span>
-                <span class="rc-total-value">&infin;</span>
-            </div>
-            <div class="rc-note">(Enthusiasm Tax Incl.)</div>
 
             <hr class="rc-divider">
 
@@ -802,6 +797,13 @@
 
 <script>
 (function() {
+    var d = new Date();
+    var dateStr = (d.getMonth()+1).toString().padStart(2,'0') + '/' + d.getDate().toString().padStart(2,'0') + '/' + d.getFullYear();
+    var h = d.getHours(); var m = d.getMinutes().toString().padStart(2,'0');
+    var ampm = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12;
+    var el = document.getElementById('rc-date-live');
+    if (el) el.textContent = dateStr + '\u00a0\u00a0' + h + ':' + m + ' ' + ampm;
+
     var pctEl = document.getElementById('pct');
     var loader = document.getElementById('loader');
     var pill = document.getElementById('pill');
