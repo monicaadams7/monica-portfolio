@@ -142,9 +142,6 @@
             position: fixed;
             left: 50%; top: 50%;
             transform: translate(-50%, -50%);
-            display: flex;
-            align-items: center;
-            gap: 10px;
             opacity: 0;
             pointer-events: none;
             transition: opacity .3s ease;
@@ -153,12 +150,15 @@
         .dock-wrap.visible { opacity: 1; pointer-events: auto; }
 
         .dock {
-            background: #1a1a1a;
+            background: #1c1c1c;
             border-radius: 60px;
             padding: 6px;
             display: flex;
-            gap: 3px;
+            gap: 2px;
             align-items: center;
+            box-shadow: 0 0 0 1px rgba(255,255,255,.07), 0 4px 24px rgba(0,0,0,.4);
+            -webkit-font-smoothing: antialiased;
+            transform: translateZ(0);
         }
 
         .dock-btn {
@@ -168,32 +168,42 @@
             border: none;
             cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            color: #bbb;
+            color: #999;
             text-decoration: none;
-            transition: background .15s, color .15s, transform .15s;
+            transition: background .18s, color .18s, transform .18s;
             flex-shrink: 0;
         }
-        .dock-btn:hover { background: #2d2d2d; color: #fff; transform: scale(1.1); }
-        .dock-btn:active { transform: scale(.94); }
-        .dock-btn svg { width: 16px; height: 16px; }
+        .dock-btn:hover { background: #2a2a2a; color: #fff; transform: scale(1.08); }
+        .dock-btn:active { transform: scale(.93); }
+        .dock-btn svg { width: 15px; height: 15px; }
 
-        .dock-divider { width: 1px; height: 18px; background: #333; margin: 0 3px; flex-shrink: 0; }
+        .dock-divider { width: 1px; height: 16px; background: #2e2e2e; margin: 0 2px; flex-shrink: 0; }
 
-        .dock-label {
-            background: #1a1a1a;
-            color: #fff;
-            padding: 7px 14px;
-            border-radius: 30px;
-            font-size: .75rem;
-            font-weight: 500;
-            letter-spacing: .2px;
-            white-space: nowrap;
+        /* Each icon + its inline label */
+        .dock-item { display: flex; align-items: center; }
+        .dock-item:hover .dock-btn { background: #2a2a2a; color: #fff; }
+
+        .dock-item-label {
+            max-width: 0;
+            overflow: hidden;
             opacity: 0;
-            transform: translateX(-6px);
-            transition: opacity .18s, transform .18s;
+            white-space: nowrap;
+            font-size: .72rem;
+            font-weight: 500;
+            color: #bbb;
+            letter-spacing: .15px;
+            padding: 0;
+            transition: max-width .32s cubic-bezier(.4,0,.2,1),
+                        opacity .22s ease,
+                        padding .32s cubic-bezier(.4,0,.2,1);
             pointer-events: none;
+            user-select: none;
         }
-        .dock-label.show { opacity: 1; transform: translateX(0); }
+        .dock-item:hover .dock-item-label {
+            max-width: 100px;
+            opacity: 1;
+            padding: 0 10px 0 5px;
+        }
 
         /* ===== ABOUT ME OVERLAY ===== */
         .about-overlay {
@@ -612,21 +622,29 @@
 
     <div class="dock-wrap" id="dockWrap">
         <div class="dock">
-            <button class="dock-btn" id="dockBack" aria-label="Back" data-label="Back">
+            <button class="dock-btn" id="dockBack" aria-label="Back">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
             </button>
             <div class="dock-divider"></div>
-            <a class="dock-btn" href="https://www.linkedin.com/in/monicakadams/" target="_blank" rel="noopener" data-label="LinkedIn">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg>
-            </a>
-            <a class="dock-btn" href="experience.html" id="expLink" data-label="Experience">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z"/></svg>
-            </a>
-            <a class="dock-btn" href="https://substack.com/@monicakadams" target="_blank" rel="noopener" data-label="Substack">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"/></svg>
-            </a>
+            <div class="dock-item">
+                <a class="dock-btn" href="https://www.linkedin.com/in/monicakadams/" target="_blank" rel="noopener" aria-label="LinkedIn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg>
+                </a>
+                <span class="dock-item-label">LinkedIn</span>
+            </div>
+            <div class="dock-item">
+                <a class="dock-btn" href="experience.html" id="expLink" aria-label="Experience">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z"/></svg>
+                </a>
+                <span class="dock-item-label">Experience</span>
+            </div>
+            <div class="dock-item">
+                <a class="dock-btn" href="https://substack.com/@monicakadams" target="_blank" rel="noopener" aria-label="Substack">
+                    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
+                </a>
+                <span class="dock-item-label">Substack</span>
+            </div>
         </div>
-        <span class="dock-label" id="dockLabel"></span>
     </div>
 
     <div class="about-overlay" id="aboutOverlay">
@@ -793,7 +811,6 @@
     var bioBtn = document.getElementById('bioBtn');
     var linksBtn = document.getElementById('linksBtn');
     var dockWrap = document.getElementById('dockWrap');
-    var dockLabel = document.getElementById('dockLabel');
     var aboutOverlay = document.getElementById('aboutOverlay');
     var aboutClose = document.getElementById('aboutClose');
 
@@ -849,7 +866,6 @@
 
     function closeDock() {
         dockWrap.classList.remove('visible');
-        dockLabel.classList.remove('show');
         showingDock = false;
         setTimeout(function() { pill.classList.remove('hidden'); }, 200);
     }
@@ -861,16 +877,6 @@
 
     document.addEventListener('click', function(e) {
         if (showingDock && !dockWrap.contains(e.target)) closeDock();
-    });
-
-    dockWrap.querySelectorAll('[data-label]').forEach(function(btn) {
-        btn.addEventListener('mouseenter', function() {
-            dockLabel.textContent = btn.dataset.label;
-            dockLabel.classList.add('show');
-        });
-        btn.addEventListener('mouseleave', function() {
-            dockLabel.classList.remove('show');
-        });
     });
 
     function closeAboutWithCrumple() {
