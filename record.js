@@ -20,8 +20,8 @@ async function naturalClick(page, selector) {
 
   const browser = await chromium.launch({ headless: false });
   const context = await browser.newContext({
-    viewport: { width: 1280, height: 800 },
-    recordVideo: { dir: videosDir, size: { width: 1280, height: 800 } }
+    viewport: { width: 4096, height: 2304 },
+    recordVideo: { dir: videosDir, size: { width: 4096, height: 2304 } }
   });
   const page = await context.newPage();
 
@@ -78,7 +78,7 @@ async function naturalClick(page, selector) {
 
   // Go back — dock reappears via #links hash
   await page.goBack();
-  await page.waitForSelector('.dock-wrap.visible', { timeout: 5000 });
+  await page.waitForSelector('.dock-wrap.visible', { timeout: 15000 });
   await page.waitForTimeout(600);
 
   // Close dock — pill slides back in
