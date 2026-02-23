@@ -969,9 +969,24 @@
         var file = this.files[0]; if (!file) return;
         var reader = new FileReader();
         reader.onload = function(e) {
-            document.getElementById('pv-photo').src = e.target.result;
-            document.getElementById('photoLabel').classList.add('has-photo');
-            document.getElementById('photoLabelText').textContent = 'photo added \u2713';
+            var img = new Image();
+            img.onload = function() {
+                var canvas = document.createElement('canvas');
+                canvas.width = img.width; canvas.height = img.height;
+                var ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                var id = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                var d = id.data;
+                for (var i = 0; i < d.length; i += 4) {
+                    var g = Math.min(255, Math.max(0, (0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2] - 128) * 1.1 + 128));
+                    d[i] = d[i+1] = d[i+2] = g;
+                }
+                ctx.putImageData(id, 0, 0);
+                document.getElementById('pv-photo').src = canvas.toDataURL('image/jpeg', 0.92);
+                document.getElementById('photoLabel').classList.add('has-photo');
+                document.getElementById('photoLabelText').textContent = 'photo added \u2713';
+            };
+            img.src = e.target.result;
         };
         reader.readAsDataURL(file);
     });
