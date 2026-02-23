@@ -143,19 +143,12 @@
             background: #1a1a1a;
             border-radius: 60px;
             padding: 8px;
-            display: flex; gap: 6px; align-items: center;
+            display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
             opacity: 0; transform: scale(.85);
             pointer-events: none;
             transition: opacity .35s ease, transform .35s cubic-bezier(.32,.72,0,1);
-            width: min(240px, 78vw);
-            overflow-x: auto;
-            overflow-y: hidden;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            cursor: grab;
+            max-width: calc(100vw - 32px);
         }
-        .links-panel::-webkit-scrollbar { display: none; }
-        .links-panel.is-dragging, .links-panel.is-dragging * { cursor: grabbing !important; }
 
         .links-panel.visible {
             opacity: 1; pointer-events: auto;
@@ -880,52 +873,6 @@
     aboutOverlay.addEventListener('click', function(e) {
         if (e.target === aboutOverlay) closeAboutWithCrumple();
     });
-
-    var lp = linksPanel;
-    var lpDragging = false, lpStartX, lpScrollStart, lpMoved = false, lpVelocity = 0, lpRaf;
-    var lpHistory = [];
-
-    function lpDecay() {
-        if (Math.abs(lpVelocity) < 0.3) return;
-        lp.scrollLeft -= lpVelocity;
-        lpVelocity *= 0.95;
-        lpRaf = requestAnimationFrame(lpDecay);
-    }
-
-    lp.addEventListener('mousedown', function(e) {
-        cancelAnimationFrame(lpRaf);
-        lpDragging = true; lpMoved = false;
-        lpStartX = e.pageX; lpScrollStart = lp.scrollLeft;
-        lpVelocity = 0; lpHistory = [{x: e.pageX, t: Date.now()}];
-        lp.classList.add('is-dragging');
-        document.body.style.userSelect = 'none';
-    });
-
-    document.addEventListener('mousemove', function(e) {
-        if (!lpDragging) return;
-        if (Math.abs(e.pageX - lpStartX) > 4) lpMoved = true;
-        lp.scrollLeft = lpScrollStart - (e.pageX - lpStartX);
-        lpHistory.push({x: e.pageX, t: Date.now()});
-        if (lpHistory.length > 8) lpHistory.shift();
-    });
-
-    document.addEventListener('mouseup', function() {
-        if (!lpDragging) return;
-        lpDragging = false;
-        lp.classList.remove('is-dragging');
-        document.body.style.userSelect = '';
-        var now = Date.now();
-        var recent = lpHistory.filter(function(p) { return now - p.t < 80; });
-        if (recent.length >= 2) {
-            var dt = Math.max(1, recent[recent.length-1].t - recent[0].t);
-            lpVelocity = (recent[0].x - recent[recent.length-1].x) / dt * 14;
-        }
-        requestAnimationFrame(lpDecay);
-    });
-
-    lp.addEventListener('click', function(e) {
-        if (lpMoved) { e.preventDefault(); e.stopPropagation(); lpMoved = false; }
-    }, true);
 
     document.getElementById('expLink').addEventListener('click', function() {
         history.replaceState(null, '', '#links');
