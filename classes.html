@@ -43,37 +43,42 @@
         }
 
         .class-name {
-            font-size: .95rem;
-            font-weight: 500;
-            color: #1a1a1a;
-            text-decoration: underline;
-            text-underline-offset: 3px;
-            text-decoration-color: rgba(0,0,0,.28);
-            transition: text-decoration-color .2s;
+            font-size: .92rem;
+            font-weight: 400;
+            color: #444;
             display: block;
-            margin-bottom: 6px;
+            padding-left: 14px;
+            position: relative;
+            line-height: 1.5;
+            transition: color .2s;
         }
-        .class-card:hover .class-name { text-decoration-color: #1a1a1a; }
+        .class-name::before {
+            content: '·';
+            position: absolute;
+            left: 0;
+            color: #bbb;
+        }
+        .class-card:hover .class-name { color: #1a1a1a; }
 
         .class-bullets {
             list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 2px;
-            padding-left: 2px;
+            gap: 4px;
+            margin-top: 4px;
         }
         .class-bullets li {
-            font-size: .78rem;
-            color: #999;
-            line-height: 1.5;
-            padding-left: 12px;
+            font-size: .82rem;
+            color: #666;
+            line-height: 1.6;
+            padding-left: 14px;
             position: relative;
         }
         .class-bullets li::before {
             content: '·';
             position: absolute;
             left: 0;
-            color: #ccc;
+            color: #bbb;
         }
 
         .class-back {
@@ -122,13 +127,12 @@
                 <div class="class-inner">
                     <div class="class-front">
                         <span class="class-name">Biomedical Ethics</span>
-                        <ul class="class-bullets">
-                            <li>Ethics in medicine, research, and end-of-life care</li>
-                            <li>Left with more questions than answers</li>
-                        </ul>
                     </div>
                     <div class="class-back">
-                        <p>One of those classes that changes how you think. Worked through the hardest questions in medicine — consent, autonomy, end-of-life care, research ethics. The kind of class where you leave with more questions than answers, which means it did its job.</p>
+                        <ul class="class-bullets">
+                            <li>Ethics in medicine, consent, autonomy, and end-of-life care</li>
+                            <li>Left with more questions than answers</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -137,13 +141,26 @@
                 <div class="class-inner">
                     <div class="class-front">
                         <span class="class-name">Principles of Oral Communication</span>
+                    </div>
+                    <div class="class-back">
                         <ul class="class-bullets">
-                            <li>Extemporaneous speech</li>
+                            <li>Extemporaneous speech, real-time argument structure</li>
                             <li>Won extra credit for best speeches</li>
                         </ul>
                     </div>
+                </div>
+            </div>
+
+            <div class="class-card">
+                <div class="class-inner">
+                    <div class="class-front">
+                        <span class="class-name">Economics 185, Prof. Stephen Ross</span>
+                    </div>
                     <div class="class-back">
-                        <p>Learned the art of extemporaneous speech — thinking on your feet, structuring an argument in real time, and delivering it with conviction. Won extra credit for best speeches. One of the most practically useful things I've learned at UCLA.</p>
+                        <ul class="class-bullets">
+                            <li>Drove from San Diego every evening to teach investing, markets, life</li>
+                            <li>Lead with your heart. Tell people and show them.</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -151,15 +168,13 @@
             <div class="class-card">
                 <div class="class-inner">
                     <div class="class-front">
-                        <span class="class-name">Economics 185 — Prof. Stephen Ross</span>
-                        <ul class="class-bullets">
-                            <li>Investing, markets, life</li>
-                            <li>Drove from San Diego every evening to teach</li>
-                        </ul>
+                        <span class="class-name">Computer Science 97, Entrepreneurship</span>
                     </div>
                     <div class="class-back">
-                        <p>Professor Ross drove down from San Diego every single evening to teach this class. His lectures were some of the most heartfelt I've ever heard — investing, markets, life. One of the best lessons I've ever learned came from this class:</p>
-                        <div class="class-pullquote">"Lead with your heart. Tell people and show them."</div>
+                        <ul class="class-bullets">
+                            <li>Mini Y Combinator at UCLA, taught by founders of MapQuest and DreamHost</li>
+                            <li>Built <a href="https://asksephira.com" target="_blank" rel="noopener">asksephira.com</a> and won the pitch competition</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -167,15 +182,13 @@
             <div class="class-card">
                 <div class="class-inner">
                     <div class="class-front">
-                        <span class="class-name">Computer Science 97 — Entrepreneurship</span>
-                        <ul class="class-bullets">
-                            <li>Mini Y Combinator at UCLA</li>
-                            <li>Won the pitch competition · built asksephira.com</li>
-                        </ul>
+                        <span class="class-name">PhysSci 107, Systems Anatomy</span>
                     </div>
                     <div class="class-back">
-                        <p>Like a mini Y Combinator inside UCLA. Taught by Michael Blend (founder of Systems1 and MapQuest) and Josh Jones (founder of DreamHost and early Bitcoin investor) — genuinely extraordinary teachers and human beings.</p>
-                        <p>We built <a href="https://asksephira.com" target="_blank" rel="noopener">asksephira.com</a> and won the pitch competition.</p>
+                        <ul class="class-bullets">
+                            <li>The cadaver class; tested on every cranial nerve and structure of the body</li>
+                            <li>Changed how I think about medicine</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -183,31 +196,13 @@
             <div class="class-card">
                 <div class="class-inner">
                     <div class="class-front">
-                        <span class="class-name">PhysSci 107 — Systems Anatomy</span>
-                        <ul class="class-bullets">
-                            <li>The cadaver class — hallmark of the physiology major</li>
-                            <li>Cranial nerves, every structure of the body</li>
-                        </ul>
+                        <span class="class-name">Physics 5B, Thermodynamics and Waves</span>
                     </div>
                     <div class="class-back">
-                        <p>The hallmark of the physiology major at UCLA. Spent real time working with cadavers — an experience that taught me more than almost any other class in my life. Incredibly hard: tested on every cranial nerve, every intricate structure of the human body.</p>
-                        <p>You come out of it with a completely different relationship to medicine.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="class-card">
-                <div class="class-inner">
-                    <div class="class-front">
-                        <span class="class-name">Physics 5B — Thermodynamics & Waves</span>
                         <ul class="class-bullets">
-                            <li>Heat systems, noise-cancelling headphones, blood vessels</li>
-                            <li>Why ambulances sound different as they pass</li>
+                            <li>Best professor I had; made physics explain everything around you</li>
+                            <li>Heat systems, noise-cancelling headphones, blood flow, the Doppler effect</li>
                         </ul>
-                    </div>
-                    <div class="class-back">
-                        <p>One of the best professors I've had. Made physics feel like the explanation for everything: how heat systems work in houses, how noise-cancelling headphones work, the physics of blood vessels, why an ambulance sounds different as it passes.</p>
-                        <p>The world makes more sense after this class.</p>
                     </div>
                 </div>
             </div>

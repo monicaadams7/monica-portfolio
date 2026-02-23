@@ -137,45 +137,27 @@
         .pill-btn.blue { background: #998CEB; }
         .pill-btn svg { width: 18px; height: 18px; color: #fff; }
 
-        /* ===== LINKS BAR (horizontal scroll, replaces pill) ===== */
+        /* ===== LINKS BAR ===== */
         .links-panel {
             position: absolute;
             background: #1a1a1a;
             border-radius: 60px;
-            padding: 14px 8px;
+            padding: 8px;
             display: flex; gap: 6px; align-items: center;
             opacity: 0; transform: scale(.85);
             pointer-events: none;
             transition: opacity .35s ease, transform .35s cubic-bezier(.32,.72,0,1);
-            width: min(300px, 90vw);
-            overflow-x: auto;
-            overflow-y: hidden;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            cursor: grab;
+            max-width: 96vw;
         }
-        .links-panel::-webkit-scrollbar { display: none; }
-        .links-panel.is-dragging, .links-panel.is-dragging * { cursor: grabbing !important; }
 
         .links-panel.visible {
             opacity: 1; pointer-events: auto;
             transform: scale(1);
         }
 
-        .links-back {
-            width: 38px; height: 38px;
-            border-radius: 50%; border: none;
-            background: #2a2a2a; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: background .2s, transform .15s;
-            flex-shrink: 0;
-        }
-        .links-back:hover { background: #3a3a3a; transform: scale(1.05); }
-        .links-back svg { width: 16px; height: 16px; color: #999; }
-
         .link-chip {
-            display: flex; align-items: center; gap: 8px;
-            padding: 10px 18px;
+            display: flex; align-items: center; gap: 7px;
+            padding: 10px 15px;
             border-radius: 30px;
             background: #2a2a2a;
             color: #bbb;
@@ -607,9 +589,6 @@
     </div>
 
     <div class="links-panel" id="linksPanel">
-        <button class="links-back" id="linksBack" aria-label="Back">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
-        </button>
         <a class="link-chip" href="https://www.linkedin.com/in/monicakadams/" target="_blank" rel="noopener">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg>
             LinkedIn
@@ -790,7 +769,6 @@
     var linksPanel = document.getElementById('linksPanel');
     var aboutOverlay = document.getElementById('aboutOverlay');
     var aboutClose = document.getElementById('aboutClose');
-    var linksBack = document.getElementById('linksBack');
 
     var v = 0;
     var showingLinks = false;
@@ -842,11 +820,14 @@
         setTimeout(function() { linksPanel.classList.add('visible'); showingLinks = true; }, 200);
     });
 
-    linksBack.addEventListener('click', function(e) {
-        e.stopPropagation();
+    function closeLinks() {
         linksPanel.classList.remove('visible');
         showingLinks = false;
         setTimeout(function() { pill.classList.remove('hidden'); }, 200);
+    }
+
+    document.addEventListener('click', function(e) {
+        if (showingLinks && !linksPanel.contains(e.target)) closeLinks();
     });
 
     function closeAboutWithCrumple() {
@@ -892,56 +873,6 @@
     aboutOverlay.addEventListener('click', function(e) {
         if (e.target === aboutOverlay) closeAboutWithCrumple();
     });
-
-    var lp = linksPanel;
-    var lpDragging = false, lpStartX, lpScrollStart, lpMoved = false, lpVelocity = 0, lpRaf;
-    var lpHistory = [];
-
-    function lpDecay() {
-        if (Math.abs(lpVelocity) < 0.3) return;
-        lp.scrollLeft -= lpVelocity;
-        lpVelocity *= 0.95;
-        lpRaf = requestAnimationFrame(lpDecay);
-    }
-
-    lp.addEventListener('mousedown', function(e) {
-        cancelAnimationFrame(lpRaf);
-        lpDragging = true;
-        lpMoved = false;
-        lpStartX = e.pageX;
-        lpScrollStart = lp.scrollLeft;
-        lpVelocity = 0;
-        lpHistory = [{x: e.pageX, t: Date.now()}];
-        lp.classList.add('is-dragging');
-        document.body.style.userSelect = 'none';
-    });
-
-    document.addEventListener('mousemove', function(e) {
-        if (!lpDragging) return;
-        if (Math.abs(e.pageX - lpStartX) > 4) lpMoved = true;
-        lp.scrollLeft = lpScrollStart - (e.pageX - lpStartX);
-        lpHistory.push({x: e.pageX, t: Date.now()});
-        if (lpHistory.length > 8) lpHistory.shift();
-    });
-
-    document.addEventListener('mouseup', function() {
-        if (!lpDragging) return;
-        lpDragging = false;
-        lp.classList.remove('is-dragging');
-        document.body.style.userSelect = '';
-        var now = Date.now();
-        var recent = lpHistory.filter(function(p) { return now - p.t < 80; });
-        if (recent.length >= 2) {
-            var dt = Math.max(1, recent[recent.length-1].t - recent[0].t);
-            lpVelocity = (recent[0].x - recent[recent.length-1].x) / dt * 14;
-        }
-        requestAnimationFrame(lpDecay);
-    });
-
-    // Block link navigation if the user was dragging
-    lp.addEventListener('click', function(e) {
-        if (lpMoved) { e.preventDefault(); e.stopPropagation(); lpMoved = false; }
-    }, true);
 
     document.getElementById('expLink').addEventListener('click', function() {
         history.replaceState(null, '', '#links');
@@ -1031,8 +962,7 @@
             } else if (aboutOverlay.classList.contains('visible')) {
                 closeAboutWithCrumple();
             } else if (showingLinks) {
-                linksPanel.classList.remove('visible'); showingLinks = false;
-                setTimeout(function() { pill.classList.remove('hidden'); }, 200);
+                closeLinks();
             } else if (pill.classList.contains('expanded')) {
                 pill.classList.remove('expanded');
             }
